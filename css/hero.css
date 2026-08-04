@@ -1,0 +1,312 @@
+/* ===================================================================
+   GEROBAK BETAWI - HERO
+   =================================================================== */
+
+.hero{
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-top: var(--nav-h);
+  padding-bottom: 76px;
+  /* The hero has NO background of its own - it's a transparent window
+     onto <body>'s wood wall, which already spans the entire page
+     (including the area behind the hero). Painting a second, separately
+     computed gradient here was what caused the visible seam where the
+     hero's box ended and the next section began: two different gradients
+     (different direction/box size) can never line up pixel-for-pixel.
+     By not painting anything at all, there is nothing that can fail to
+     line up - the wall underneath is identical on both sides of the seam
+     because it's literally the same paint. The moody darkening at the
+     top is added separately below, as an overlay that fades to fully
+     transparent well before the bottom edge. */
+  background: transparent;
+}
+
+.hero__backdrop{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 85% 18%, rgba(244,148,2,0.22), transparent 45%),
+    radial-gradient(circle at 8% 85%, rgba(61,92,58,0.28), transparent 50%);
+}
+
+/* ---- Top vignette: darkens the wood wall behind the cart/copy without
+   ever reaching the bottom of the hero. Guaranteed fully transparent by
+   62% down, so no matter the hero's actual rendered height (100vh on a
+   tall monitor vs. a short laptop window), there is always a clean
+   stretch of plain, untouched wall right before the seam - which is
+   what makes the handoff into the next section invisible. ---- */
+.hero::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg,
+    rgba(15,5,6,0.88) 0%,
+    rgba(35,13,16,0.62) 26%,
+    rgba(35,13,16,0.28) 44%,
+    rgba(35,13,16,0) 62%);
+  pointer-events: none;
+}
+.hero__weave{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.06;
+  background-image: repeating-linear-gradient(115deg, var(--gb-marigold) 0 2px, transparent 2px 34px);
+  mix-blend-mode: overlay;
+}
+
+.hero__content{
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--sp-8);
+  align-items: center;
+}
+
+.hero__copy .eyebrow{ color: var(--gb-marigold); }
+
+.hero__title{
+  font-size: clamp(2.6rem, 6vw, var(--fs-5xl));
+  line-height: 1.28;
+  color: var(--gb-white);
+  margin-bottom: var(--sp-5);
+}
+
+/* ---- Rotating word pill, scaled to sit inline inside the big H1 ---- */
+.hero__title--rotating .rotating-text-slot{
+  display: inline-block;
+  vertical-align: middle;
+}
+.hero__title--rotating .rotating-text{
+  font-size: 0.62em;
+  padding: 0.14em 0.55em 0.2em;
+  border-radius: 0.3em;
+  top: -0.06em;
+  line-height: 1.4;
+}
+
+/* ---- Underlined closing word ("Terbaik") ---- */
+.hero__title-underline{
+  color: var(--gb-marigold);
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+.hero__title-underline::after{
+  content: '';
+  position: absolute;
+  left: -2%; right: -2%; bottom: -0.06em;
+  height: 0.09em;
+  background: var(--gb-marigold);
+  border-radius: 4px;
+}
+
+.hero__lede{
+  font-size: var(--fs-md);
+  color: rgba(248,239,219,0.86);
+  max-width: 540px;
+  margin-bottom: var(--sp-6);
+}
+
+.hero__ctas{
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-7);
+}
+
+.btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  padding: 15px 26px;
+  border-radius: 999px;
+  transition: transform var(--dur-fast) var(--ease-cart), box-shadow var(--dur-fast), background var(--dur-fast);
+  border: none;
+  cursor: pointer;
+}
+.btn svg{ width: 19px; height: 19px; flex-shrink: 0; }
+.btn--primary{
+  background: var(--gb-marigold);
+  color: var(--gb-maroon);
+  box-shadow: 0 6px 0 var(--gb-marigold-deep);
+}
+.btn--primary:hover{ transform: translateY(-3px); box-shadow: 0 9px 0 var(--gb-marigold-deep); }
+.btn--primary:active{ transform: translateY(1px); box-shadow: 0 3px 0 var(--gb-marigold-deep); }
+
+.btn--ghost{
+  background: transparent;
+  color: var(--gb-white);
+  border: 1.5px solid rgba(255,255,255,0.35);
+}
+.btn--ghost:hover{ background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); }
+
+.btn--dark{
+  background: var(--gb-maroon);
+  color: var(--gb-white);
+}
+.btn--dark:hover{ background: var(--gb-maroon-light); transform: translateY(-2px); }
+
+.hero__stats{
+  display: flex;
+  gap: var(--sp-7);
+  margin-top: var(--sp-6);
+  margin-bottom: var(--sp-2);
+}
+.hero__stats--two{ gap: var(--sp-8); }
+.hero__stat{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.hero__stat b{
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  color: var(--gb-white);
+}
+.hero__stat span{
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.06em;
+  color: rgba(248,239,219,0.6);
+  text-transform: uppercase;
+  text-align: center;
+  max-width: 12ch;
+}
+
+/* ---- Signature element: the rolling gerobak (right column) ---- */
+.hero__cart-stage{
+  position: relative;
+  height: 460px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.cart-road{
+  position: absolute;
+  bottom: 38px; left: 0; right: 0;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, rgba(244,148,2,0.45) 0 18px, transparent 18px 34px);
+}
+
+.cart-rig{
+  position: relative;
+  width: 88%;
+  max-width: 460px;
+  animation: cart-bob 3.4s ease-in-out infinite;
+}
+.cart-rig svg{ width: 100%; height: auto; overflow: visible; }
+
+.cart-wheel{ animation: cart-spin 2.6s linear infinite; }
+
+@keyframes cart-bob{
+  0%, 100%{ transform: translateY(0); }
+  50%{ transform: translateY(-9px); }
+}
+@keyframes cart-spin{
+  to{ transform: rotate(360deg); }
+}
+
+.steam{
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: rgba(248,239,219,0.5);
+  filter: blur(3px);
+  animation: steam-rise 3.2s ease-in infinite;
+}
+.steam:nth-child(2){ animation-delay: 1s; left: 14px; }
+.steam:nth-child(3){ animation-delay: 2s; left: -10px; }
+@keyframes steam-rise{
+  0%{ opacity: 0; transform: translateY(0) scale(0.6); }
+  25%{ opacity: 0.7; }
+  100%{ opacity: 0; transform: translateY(-70px) scale(1.4); }
+}
+
+.hero__badge-float{
+  position: absolute;
+  top: 18%;
+  left: -6%;
+  background: var(--gb-white);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-label);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--gb-maroon);
+  animation: float-soft 4.5s ease-in-out infinite;
+}
+.hero__badge-float img{
+  width: 28px; height: 28px;
+  object-fit: contain;
+}
+@keyframes float-soft{
+  0%, 100%{ transform: translateY(0) rotate(-2deg); }
+  50%{ transform: translateY(-12px) rotate(2deg); }
+}
+
+.hero__scroll-cue{
+  position: absolute;
+  bottom: var(--sp-5);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(248,239,219,0.6);
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.hero__scroll-cue svg{ width: 18px; height: 18px; animation: cue-bounce 1.8s ease-in-out infinite; }
+@keyframes cue-bounce{
+  0%, 100%{ transform: translateY(0); opacity: 0.5; }
+  50%{ transform: translateY(7px); opacity: 1; }
+}
+
+@media (max-width: 980px){
+  .hero{ padding-bottom: 96px; }
+  .hero__content{ grid-template-columns: 1fr; text-align: center; }
+  .hero__lede{ margin-inline: auto; }
+  .hero__ctas{ justify-content: center; }
+  .hero__stats{ justify-content: center; }
+  .hero__cart-stage{ height: 240px; margin-top: var(--sp-2); align-items: center; }
+  .hero__badge-float{
+    left: auto;
+    right: 4%;
+    top: -14px;
+    padding: 9px 13px;
+    gap: 8px;
+  }
+  .hero__badge-float img{ width: 22px; height: 22px; }
+  .hero__badge-float span{ font-size: 0.72rem; }
+}
+@media (max-width: 560px){
+  .hero__stats{ gap: var(--sp-5); flex-wrap: wrap; row-gap: var(--sp-5); }
+  .btn{ padding: 13px 20px; font-size: var(--fs-xs); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .cart-rig, .cart-wheel, .steam, .hero__badge-float, .hero__scroll-cue svg{
+    animation: none !important;
+  }
+}

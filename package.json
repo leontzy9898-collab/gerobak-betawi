@@ -1,0 +1,9 @@
+{
+  "name": "gerobak-betawi",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Gerobak Betawi website: static HTML/CSS/JS front-end plus a single Vercel serverless function for the contact form (api/contact.js, sends email via Resend).",
+  "engines": {
+    "node": ">=18"
+  }
+}

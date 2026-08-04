@@ -1,0 +1,117 @@
+/* ===================================================================
+   GEROBAK BETAWI - INTERACTION EFFECTS
+   Styles for the rotating-text hero word and the word-by-word
+   scroll reveal, both driven by js/effects.js.
+   =================================================================== */
+
+/* ---- Rotating text (hero eyebrow) ---- */
+.rotating-text{
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: bottom;
+  background: var(--gb-marigold);
+  color: var(--gb-maroon);
+  padding: 2px 14px 4px;
+  border-radius: 999px;
+  font-weight: 800;
+  line-height: 1.5;
+  position: relative;
+  top: 2px;
+}
+.rotating-text__word{
+  display: inline-block;
+  text-align: center;
+  transition: transform 260ms var(--ease-soft), opacity 260ms var(--ease-soft);
+  transform: translateY(0);
+  opacity: 1;
+}
+.rotating-text__word.is-leaving{
+  transform: translateY(-110%);
+  opacity: 0;
+}
+.rotating-text__word.is-entering{
+  transform: translateY(110%);
+  opacity: 0;
+}
+
+/* ---- YouTube click-to-play facade ----
+   Loads a real thumbnail image immediately (so there's always something
+   to preview, instantly) and only requests the actual YouTube iframe
+   once the visitor clicks play - the previous always-on <iframe> could
+   render a YouTube-side "player configuration error" placeholder before
+   the embed had fully negotiated, with nothing useful behind it. */
+.yt-facade{
+  cursor: pointer;
+  background: var(--gb-maroon-deep);
+}
+.yt-facade__thumb{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.yt-facade__play{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15,5,6,0.16);
+  transition: background var(--dur-fast);
+}
+.yt-facade__play svg{
+  width: 25%;
+  min-width: 52px;
+  max-width: 84px;
+  height: auto;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+  transition: transform var(--dur-fast) var(--ease-cart);
+}
+.yt-facade:hover .yt-facade__play,
+.yt-facade__play:focus-visible{
+  background: rgba(15,5,6,0.3);
+}
+.yt-facade:hover .yt-facade__play svg,
+.yt-facade__play:focus-visible svg{ transform: scale(1.08); }
+.yt-facade__play:focus-visible{ outline: 2px solid var(--gb-marigold); outline-offset: -4px; }
+.yt-facade iframe{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0; display: block;
+}
+.yt-facade__local-fallback{
+  position: absolute; inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--sp-4);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--gb-white);
+  background: rgba(15,5,6,0.88);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.yt-facade__local-fallback:hover{ color: var(--gb-marigold); }
+
+/* ---- Word-by-word scroll reveal ---- */
+.word-reveal__word{
+  display: inline-block;
+  opacity: 0.12;
+  filter: blur(6px);
+  transition: opacity 550ms var(--ease-soft), filter 550ms var(--ease-soft);
+  will-change: opacity, filter;
+}
+[data-word-reveal].is-revealed .word-reveal__word{
+  opacity: 1;
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .rotating-text__word{ transition: none; }
+  .word-reveal__word{ transition: none; opacity: 1; filter: none; }
+}

@@ -1,0 +1,153 @@
+/* ===================================================================
+   GEROBAK BETAWI - FORMS
+   =================================================================== */
+
+.form-card{
+  background: var(--gb-white);
+  border-radius: var(--r-lg);
+  padding: var(--sp-7);
+  box-shadow: var(--shadow-lg);
+}
+@media (max-width: 640px){
+  .form-card{ padding: var(--sp-5); }
+}
+
+.field{
+  margin-bottom: var(--sp-5);
+}
+.field-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+}
+@media (max-width: 560px){
+  .field-row{ grid-template-columns: 1fr; }
+}
+
+.field label{
+  display: block;
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--gb-maroon);
+  margin-bottom: 8px;
+}
+.field label .req{ color: var(--gb-chili); margin-left: 3px; }
+
+.field input,
+.field textarea,
+.field select{
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid rgba(35,13,16,0.14);
+  border-radius: var(--r-sm);
+  background: var(--gb-parchment);
+  color: var(--gb-ink);
+  font-size: var(--fs-base);
+  transition: border-color var(--dur-fast), background var(--dur-fast);
+}
+.field input::placeholder, .field textarea::placeholder{ color: rgba(39,23,19,0.6); }
+.field input:focus, .field textarea:focus, .field select:focus{
+  border-color: var(--gb-marigold);
+  background: var(--gb-white);
+  outline: none;
+  box-shadow: var(--shadow-glow);
+}
+.field textarea{ resize: vertical; min-height: 140px; }
+
+.field-hint{
+  font-size: var(--fs-2xs);
+  color: rgba(39,23,19,0.68);
+  margin-top: 6px;
+}
+.field-error{
+  font-size: var(--fs-2xs);
+  color: var(--gb-chili);
+  margin-top: 6px;
+  display: none;
+  font-weight: 700;
+}
+.field.has-error input, .field.has-error textarea, .field.has-error select{
+  border-color: var(--gb-chili);
+}
+.field.has-error .field-error{ display: block; }
+
+/* Honeypot - visually + structurally hidden from humans and most bots */
+.field--honeypot{
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.form-submit{
+  width: 100%;
+  justify-content: center;
+  font-size: var(--fs-md);
+  padding: 17px 26px;
+}
+.form-submit:disabled{ opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+.form-status{
+  margin-top: var(--sp-4);
+  padding: 14px 18px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+.form-status svg{ width: 20px; height: 20px; flex-shrink: 0; }
+.form-status.is-visible{ display: flex; }
+.form-status--success{ background: rgba(61,92,58,0.12); color: var(--gb-leaf-deep); }
+.form-status--error{ background: rgba(185,56,31,0.1); color: var(--gb-chili); }
+.form-status a{ color: inherit; font-weight: 800; }
+
+.local-mode-notice{
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(244,148,2,0.14);
+  color: var(--gb-maroon);
+  border: 1.5px dashed var(--gb-marigold-deep);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  font-size: var(--fs-sm);
+  margin-bottom: var(--sp-5);
+}
+.local-mode-notice.is-visible{ display: flex; }
+.local-mode-notice svg{ width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; color: var(--gb-marigold-deep); }
+
+.consent-row{
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: var(--sp-5);
+}
+.consent-row input{ width: 18px; height: 18px; margin-top: 3px; accent-color: var(--gb-marigold); flex-shrink: 0; }
+.consent-row label{ font-size: var(--fs-xs); color: rgba(39,23,19,0.7); text-transform: none; font-weight: 500; letter-spacing: 0; }
+
+.char-count{
+  text-align: right;
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  color: rgba(39,23,19,0.68);
+  margin-top: 4px;
+}
+
+/* spinner for submit loading state */
+.spinner{
+  width: 18px; height: 18px;
+  border: 2.5px solid rgba(35,13,16,0.25);
+  border-top-color: var(--gb-maroon);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+.is-loading .spinner{ display: inline-block; }
+.is-loading .btn-label{ display: none; }
+@keyframes spin{ to{ transform: rotate(360deg); } }

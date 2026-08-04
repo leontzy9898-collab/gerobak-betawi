@@ -1,0 +1,527 @@
+/* ===================================================================
+   GEROBAK BETAWI - MENU PAGE & MISC UTILITIES
+   =================================================================== */
+
+/* ===================================================================
+   MENU PAGE WRAPPER
+   The wood-wall texture now lives on <body> site-wide (see base.css),
+   so this wrapper no longer needs its own background layer - that
+   used to double up the texture right where the page-hero already
+   fades into it, which was the hard seam/glitch this section is meant
+   to avoid. It now only supplies rhythm/padding and a positioning
+   context for the sticky category tabs.
+   =================================================================== */
+.menu-immersive{
+  position: relative;
+  padding-top: var(--sp-7);
+  padding-bottom: var(--sp-8);
+}
+.menu-immersive > *{ position: relative; z-index: 2; }
+
+/* ---- Category tab nav (menu page): floating glass pill on the wall ---- */
+.menu-tabs{
+  position: sticky;
+  top: calc(var(--nav-h) + var(--sp-3));
+  z-index: 50;
+  margin-bottom: var(--sp-7);
+}
+.menu-tabs .container{
+  background: rgba(22,7,9,0.55);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(244,148,2,0.22);
+  border-radius: 999px;
+  padding: 10px 14px;
+  box-shadow: var(--shadow-lg);
+}
+.menu-tabs__scroll{
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.menu-tabs__scroll::-webkit-scrollbar{ display: none; }
+.menu-tabs__scroll button{
+  flex-shrink: 0;
+  font-family: var(--font-label);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 11px 18px;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(248,239,219,0.75);
+  border: 1.5px solid transparent;
+  transition: background var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast);
+  white-space: nowrap;
+}
+.menu-tabs__scroll button:hover{ border-color: var(--gb-marigold); color: var(--gb-white); }
+.menu-tabs__scroll button.is-active{
+  background: var(--gb-marigold);
+  color: var(--gb-maroon);
+  border-color: var(--gb-marigold);
+}
+
+/* The header's own "Menu" dropdown (css/nav.css) only exists at
+   widths >=1300px - below that, .nav-desktop is hidden entirely in
+   favor of the hamburger drawer, which has no equivalent category
+   shortcut. So this sticky tab bar is essential everywhere except the
+   wide-desktop band where it would otherwise duplicate the header
+   dropdown right below the hero. Hiding it only there removes the
+   duplication without breaking category navigation for the vast
+   majority of real visitors (mobile/tablet/small-laptop). */
+@media (min-width: 1300px){
+  .menu-tabs{ display: none; }
+}
+
+/* ---- Text color follows the board it's printed on: dark/leaf boards
+   get the light treatment (handled globally in base.css for every
+   .section--dark/.section--leaf on any page); default parchment
+   boards keep normal ink, so no menu-page-specific override needed
+   here anymore. Only the "note" accent keeps a menu-specific tint. ---- */
+.menu-immersive .section--leaf .menu-category__head .note,
+.menu-immersive .section--dark .menu-category__head .note{ color: var(--gb-marigold-pale); }
+
+.menu-category{ margin-bottom: var(--sp-9); }
+.menu-category__head{
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+  flex-wrap: wrap;
+}
+.menu-category__head h2{ font-size: var(--fs-2xl); }
+.menu-category__head .note{
+  font-family: var(--font-label);
+  font-size: var(--fs-xs);
+  color: var(--gb-chili);
+  font-weight: 700;
+}
+
+.menu-item-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--sp-5);
+}
+
+.dish-photo-banner{
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--sp-6);
+}
+.dish-photo-banner img{ width: 100%; display: block; }
+
+/* ---- Outlet picker chips on menu page ---- */
+.outlet-chip-row{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-7);
+}
+.outlet-chip{
+  font-family: var(--font-label);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--gb-white);
+  border: 1.5px solid rgba(35,13,16,0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.outlet-chip svg{ width: 14px; height: 14px; color: var(--gb-leaf); }
+
+/* ---- Accordion (FAQ-like, used for "keunggulan" lists) ---- */
+.accordion-item{
+  border-bottom: 1px solid rgba(35,13,16,0.1);
+}
+.accordion-item__trigger{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--sp-5) 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--gb-maroon);
+  text-align: left;
+  gap: var(--sp-4);
+}
+.accordion-item__trigger svg{
+  width: 22px; height: 22px;
+  flex-shrink: 0;
+  color: var(--gb-marigold-deep);
+  transition: transform var(--dur-med) var(--ease-soft);
+}
+.accordion-item.is-open .accordion-item__trigger svg{ transform: rotate(45deg); }
+.accordion-item__panel{
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--dur-med) var(--ease-soft);
+}
+.accordion-item__panel-inner{
+  padding-bottom: var(--sp-5);
+  color: rgba(39,23,19,0.7);
+  font-size: var(--fs-base);
+  line-height: 1.65;
+}
+
+/* ---- Numbered advantage list ---- */
+.advantage-list{ display: flex; flex-direction: column; gap: var(--sp-5); }
+.advantage-list__item{ display: flex; gap: var(--sp-4); align-items: flex-start; }
+.advantage-list__num{
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  color: var(--gb-marigold);
+  background: var(--gb-maroon);
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.advantage-list__item h4{ font-size: var(--fs-md); margin-bottom: 4px; }
+.advantage-list__item p{ color: rgba(39,23,19,0.68); font-size: var(--fs-sm); }
+
+/* ---- Map embed frame ---- */
+.map-frame{
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(35,13,16,0.08);
+}
+.map-frame iframe{
+  width: 100%; height: 320px; display: block; border: 0;
+}
+
+/* Anchor-jump targets (e.g. footer links, old-page redirects landing on
+   menu.html#cat-x) should clear the sticky nav + sticky menu tabs bar. */
+#cat-signature, #cat-nasikucing, #cat-nasikotak, #cat-kambing, #cat-outlets{
+  scroll-margin-top: calc(var(--nav-h) + 64px);
+}
+
+/* ---- Location list page layout ---- */
+.location-block{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-7);
+  align-items: start;
+  padding-block: var(--sp-7);
+  border-bottom: 1px solid rgba(35,13,16,0.08);
+  scroll-margin-top: calc(var(--nav-h) + var(--sp-5));
+}
+.location-block:last-child{ border-bottom: none; }
+@media (max-width: 860px){
+  .location-block{ grid-template-columns: 1fr; }
+}
+
+.location-block__info h3{ font-size: var(--fs-xl); margin-bottom: var(--sp-2); }
+.location-block__info .addr{
+  display: flex; gap: 10px; color: rgba(39,23,19,0.72); font-size: var(--fs-sm);
+  margin-bottom: var(--sp-4);
+}
+.location-block__info .addr svg{ width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; color: var(--gb-leaf); }
+
+.contact-grid-detail{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+@media (max-width: 480px){ .contact-grid-detail{ grid-template-columns: 1fr; } }
+
+.contact-mini{
+  background: var(--gb-parchment);
+  border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4);
+}
+.contact-mini span{ display: block; font-family: var(--font-label); font-size: var(--fs-2xs); color: rgba(39,23,19,0.68); text-transform: uppercase; margin-bottom: 4px; }
+.contact-mini a, .contact-mini strong{ font-size: var(--fs-sm); font-weight: 700; color: var(--gb-maroon); }
+
+/* ---- Print styles ---- */
+@media print{
+  .site-header, .wa-float, .back-top, .mobile-drawer, .marquee{ display: none !important; }
+}
+
+/* ---- Nasi Kotak native menu cards (replaces menu board images) ---- */
+.nkt-menu-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-6);
+}
+.nkt-menu-grid--single{
+  grid-template-columns: 1fr;
+  max-width: 720px;
+  margin-inline: auto;
+}
+@media (max-width: 860px){
+  .nkt-menu-grid{ grid-template-columns: 1fr; }
+}
+
+.nkt-menu-card{
+  background: var(--gb-maroon);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.nkt-menu-card__media{
+  position: relative;
+  height: 200px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.nkt-menu-card__media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.14);
+  transition: transform 1.1s var(--ease-soft);
+}
+/* The whole card already fades/slides in via .reveal + IntersectionObserver
+   (main.js adds .is-visible). Piggyback on that same trigger to also
+   settle the banner photo in from a gentle zoom, so the "reveal" reads
+   as one deliberate camera move rather than a static swap. */
+.nkt-menu-card.is-visible .nkt-menu-card__media img{ transform: scale(1); }
+.nkt-menu-card__media::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(22,7,9,0) 40%, var(--gb-maroon-deep, #160709) 100%);
+}
+
+.nkt-menu-card__header{
+  background: var(--gb-maroon-deep, #160709);
+  padding: var(--sp-5) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  border-bottom: 2px solid var(--gb-marigold);
+}
+
+.nkt-menu-card__brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nkt-menu-card__brand img{
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: rgba(244,148,2,0.15);
+  padding: 3px;
+}
+.nkt-menu-card__brand-name{
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gb-white);
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+}
+.nkt-menu-card__brand-sub{
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  color: var(--gb-marigold);
+  letter-spacing: 0.06em;
+}
+.nkt-menu-card__header h3{
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+  color: var(--gb-white);
+  margin: 0;
+}
+
+.nkt-menu-card__items{
+  flex: 1;
+  padding: var(--sp-5) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.nkt-menu-item{
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  padding: var(--sp-3) var(--sp-3);
+  margin: 0 calc(var(--sp-3) * -1);
+  border-bottom: 1px solid rgba(244,148,2,0.14);
+  border-radius: var(--r-md);
+  transition: background var(--dur-med) var(--ease-soft), transform var(--dur-med) var(--ease-soft), box-shadow var(--dur-med) var(--ease-soft);
+}
+.nkt-menu-item:last-child{ border-bottom: none; }
+
+/* Interactive spotlight - real dish photo lifts, zooms slightly, and the
+   row gets a warm highlight on hover, tap (touch, via .is-active from
+   main.js), and keyboard focus. Every state is reachable without a mouse. */
+.nkt-menu-item:hover,
+.nkt-menu-item:focus-visible,
+.nkt-menu-item.is-active,
+.nkt-menu-item.menu-item-reveal:hover,
+.nkt-menu-item.menu-item-reveal:focus-visible,
+.nkt-menu-item.menu-item-reveal.is-active{
+  background: rgba(244,148,2,0.1);
+  transform: translateX(6px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+  outline: none;
+}
+
+.nkt-menu-item__thumb{
+  flex-shrink: 0;
+  width: 68px; height: 68px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.35);
+  transition: transform var(--dur-med) var(--ease-cart), box-shadow var(--dur-med) var(--ease-soft);
+}
+.nkt-menu-item__thumb img{
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--dur-slow) var(--ease-soft);
+}
+.nkt-menu-item:hover .nkt-menu-item__thumb,
+.nkt-menu-item:focus-visible .nkt-menu-item__thumb,
+.nkt-menu-item.is-active .nkt-menu-item__thumb{
+  transform: scale(1.14) rotate(-2deg);
+  box-shadow: 0 8px 20px rgba(244,148,2,0.4);
+}
+.nkt-menu-item:hover .nkt-menu-item__thumb img,
+.nkt-menu-item:focus-visible .nkt-menu-item__thumb img,
+.nkt-menu-item.is-active .nkt-menu-item__thumb img{
+  transform: scale(1.18);
+}
+.nkt-menu-item__body{ flex: 1; min-width: 0; }
+
+/* ---- Per-item scroll reveal: each dish row (cropped thumb, name, and
+   description) reveals on its own as it enters the viewport, instead
+   of the whole list appearing at once with the parent card. The thumb
+   wipes open left-to-right while the text fades/slides up a beat
+   later, staggered per row via js/effects.js. ---- */
+.menu-item-reveal{
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 620ms var(--ease-soft), transform 620ms var(--ease-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.menu-item-reveal.is-revealed{ opacity: 1; transform: translateY(0); }
+.menu-item-reveal .nkt-menu-item__thumb{
+  clip-path: inset(0 100% 0 0 round var(--r-md));
+  transition: clip-path 680ms var(--ease-soft);
+  transition-delay: calc(var(--reveal-delay, 0ms) + 120ms);
+}
+.menu-item-reveal.is-revealed .nkt-menu-item__thumb{
+  clip-path: inset(0 0 0 0 round var(--r-md));
+}
+@media (prefers-reduced-motion: reduce){
+  .menu-item-reveal,
+  .menu-item-reveal .nkt-menu-item__thumb{ opacity: 1; transform: none; clip-path: none; transition: none; }
+}
+
+/* ---- Placeholder thumb: shown until real dish photography is
+   uploaded to images/dishes/<slug>.jpg. The <img> tries to load first;
+   if it 404s, onerror removes it and adds --missing, revealing this
+   warm gradient + fork/spoon icon instead of a broken-image glyph. ---- */
+.nkt-menu-item__thumb--placeholder{
+  position: relative;
+  background: linear-gradient(145deg, rgba(244,148,2,0.22), rgba(185,56,31,0.18));
+}
+.nkt-menu-item__thumb--missing::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f8efdb' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round' opacity='0.75'%3E%3Cpath d='M7 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3'/%3E%3Cpath d='M9 3v18'/%3E%3Cpath d='M17 3c-1.7 0-3 2.5-3 6s1.3 6 3 6v6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 34%;
+}
+
+
+@media (max-width: 480px){
+  .nkt-menu-item__thumb{ width: 56px; height: 56px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .nkt-menu-item, .nkt-menu-item__thumb, .nkt-menu-item__thumb img{ transition: none; }
+  .nkt-menu-item:hover, .nkt-menu-item:focus-visible, .nkt-menu-item.is-active{ transform: none; }
+  .nkt-menu-item:hover .nkt-menu-item__thumb, .nkt-menu-item:focus-visible .nkt-menu-item__thumb, .nkt-menu-item.is-active .nkt-menu-item__thumb{ transform: none; }
+  .nkt-menu-item:hover .nkt-menu-item__thumb img, .nkt-menu-item:focus-visible .nkt-menu-item__thumb img, .nkt-menu-item.is-active .nkt-menu-item__thumb img{ transform: none; }
+}
+
+.nkt-menu-item__info{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-3);
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.nkt-menu-item__info strong{
+  color: var(--gb-white);
+  font-size: var(--fs-sm);
+  font-family: var(--font-display);
+}
+.nkt-menu-item__price{
+  font-family: var(--font-label);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--gb-marigold);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nkt-menu-item__price--badge{
+  background: var(--gb-marigold);
+  color: var(--gb-maroon);
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.nkt-menu-item p{
+  font-size: 0.74rem;
+  color: rgba(248,239,219,0.65);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.nkt-menu-card__outlets{
+  background: rgba(0,0,0,0.3);
+  padding: var(--sp-4) var(--sp-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  border-top: 1px solid rgba(244,148,2,0.2);
+}
+.nkt-menu-card__outlets span{
+  font-family: var(--font-label);
+  font-size: 0.65rem;
+  color: rgba(248,239,219,0.55);
+  letter-spacing: 0.02em;
+}
+
+/* ---- Simple order line (replaces the repeated outlet/contact list on
+   every card - that info already lives once in the outlets section) ---- */
+.nkt-menu-card__cta{
+  background: rgba(0,0,0,0.3);
+  padding: var(--sp-4) var(--sp-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(244,148,2,0.2);
+}
+.nkt-menu-card__cta p{
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: rgba(248,239,219,0.85);
+}
+.nkt-menu-card__cta strong{ color: var(--gb-marigold); }

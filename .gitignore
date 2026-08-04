@@ -1,0 +1,7 @@
+# Never commit secrets or local/dev artifacts.
+.env
+.env.local
+.vercel
+node_modules/
+.DS_Store
+Thumbs.db

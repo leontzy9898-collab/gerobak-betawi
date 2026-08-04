@@ -1,0 +1,858 @@
+/* ===================================================================
+   GEROBAK BETAWI - COMPONENTS
+   =================================================================== */
+
+/* ---- Leaf-edge card: torn banana-leaf silhouette used for dish cards ---- */
+.leaf-card{
+  background: var(--surface-card);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-med) var(--ease-cart), box-shadow var(--dur-med);
+  position: relative;
+}
+.leaf-card:hover{
+  transform: translateY(-6px) rotate(-0.4deg);
+  box-shadow: var(--shadow-lg);
+}
+.leaf-card__media{
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--gb-parchment-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.leaf-card__media img{
+  width: 100%; height: 100%; object-fit: cover;
+  transform: scale(1.12);
+  transition: transform var(--dur-slow) var(--ease-soft);
+}
+.leaf-card:hover .leaf-card__media img{ transform: scale(1.06); }
+.leaf-card.reveal.is-visible .leaf-card__media img{ transform: scale(1); }
+.leaf-card.reveal.is-visible:hover .leaf-card__media img{ transform: scale(1.06); }
+
+.leaf-card__price{
+  position: absolute;
+  top: 12px; right: 12px;
+  background: var(--gb-maroon);
+  color: var(--gb-marigold);
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  padding: 6px 12px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+.leaf-card__body{ padding: var(--sp-5); }
+.leaf-card__body h3{
+  font-size: var(--fs-lg);
+  margin-bottom: 6px;
+}
+.leaf-card__body p{
+  font-size: var(--fs-sm);
+  color: rgba(39,23,19,0.68);
+  line-height: 1.55;
+}
+
+.tag-row{
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: var(--sp-3);
+}
+.tag{
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--gb-parchment-dim);
+  color: var(--gb-maroon);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+.tag--spicy{ background: rgba(185,56,31,0.12); color: var(--gb-chili); }
+.tag--halal{ background: rgba(61,92,58,0.14); color: var(--gb-leaf-deep); }
+
+/* ---- Grid utilities ---- */
+.grid{ display: grid; gap: var(--sp-6); }
+.grid--2{ grid-template-columns: repeat(2, 1fr); }
+.grid--3{ grid-template-columns: repeat(3, 1fr); }
+.grid--4{ grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 980px){
+  .grid--3, .grid--4{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 620px){
+  .grid--2, .grid--3, .grid--4{ grid-template-columns: 1fr; }
+}
+
+/* ---- Stat strip ---- */
+.stat-strip{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-6);
+  background: var(--gb-white);
+  border-radius: var(--r-lg);
+  padding: var(--sp-6) var(--sp-7);
+  box-shadow: var(--shadow-md);
+  margin-top: var(--sp-7);
+  position: relative;
+  z-index: 5;
+}
+.stat-strip__item{ text-align: center; flex: 1; min-width: 140px; }
+.stat-strip__item b{
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  color: var(--gb-maroon);
+}
+.stat-strip__item span{
+  font-size: var(--fs-xs);
+  color: rgba(39,23,19,0.62);
+}
+.stat-strip__divider{ width: 1px; background: var(--gb-parchment-dim); }
+
+@media (max-width: 720px){
+  .stat-strip{ margin-top: var(--sp-6); border-radius: var(--r-md); padding: var(--sp-5); }
+}
+
+/* ---- Marquee strip: reads as a painted ribbon nailed across the wall,
+   not a flat bar of color - a hair of wood grain shows above and below
+   it and a soft shadow lifts it slightly off the wall. ---- */
+/* The marquee ribbon IS the divider between the hero and the rest of the
+   page - it used to float in its own patch of bare wood with a gap on
+   both sides, which read as two separate seams instead of one clean
+   break. Now it sits flush against the hero (no gap above) and its own
+   shadow does the work of separating "hero zone" from "content zone"
+   below: a bright top highlight where it catches the light coming off
+   the hero, and a deep cast shadow under it that the next section
+   settles behind - one ribbon, nailed across the wall, doing the job
+   two blank margins used to do. */
+.marquee{
+  background: var(--gb-marigold);
+  overflow: hidden;
+  padding: 16px 0;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+  margin-top: 0;
+  margin-bottom: var(--sp-6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    0 22px 32px -12px rgba(8,3,2,0.55);
+}
+.marquee__track{
+  display: inline-flex;
+  will-change: transform;
+  animation: marquee-scroll 24s linear infinite;
+  /* CSS-only, constant-speed loop - no JS drives this transform, so
+     there is nothing to fight the animation and nothing that can drift
+     or glitch after a language switch, resize, or scroll. */
+}
+.marquee__track span{
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  color: var(--gb-maroon);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  /* The trailing margin is baked into each copy's own width so that
+     translating by exactly -100% of one copy (or -50% of a 2-copy
+     track) lines up perfectly with no seam or gap at the loop point. */
+  margin-right: 48px;
+  flex-shrink: 0;
+}
+.marquee__track span::after{ content: '✺'; opacity: 0.5; }
+/* Three identical copies of the phrase sit in the track (see the HTML)
+   instead of two - purely so there's enough width to fill even very
+   wide/ultra-wide screens with no visible gap, on any device, without
+   any JS measuring the viewport. Since all three copies are exactly
+   the same width, translating by precisely one third of the track's
+   total width is still a perfect, gapless loop back to the start. */
+@keyframes marquee-scroll{
+  from{ transform: translateX(0); }
+  to{ transform: translateX(-33.3334%); }
+}
+@media (prefers-reduced-motion: reduce){
+  .marquee__track{ animation: none; }
+}
+
+/* ---- Story / split section ---- */
+.split{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-8);
+  align-items: center;
+}
+.split--reverse{ direction: rtl; }
+.split--reverse > *{ direction: ltr; }
+@media (max-width: 860px){
+  .split{ grid-template-columns: 1fr; }
+  .split--reverse{ direction: ltr; }
+}
+
+.split__media{
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background: var(--gb-parchment-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 560px;
+}
+.split__media img{ width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3.2; }
+/* is-uncropped: used for tall portrait images like tumpeng flyer */
+.split__media.is-uncropped img{ object-fit: contain; aspect-ratio: auto; max-height: 520px; background: var(--gb-parchment); }
+
+.split__media::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(200deg, rgba(244,148,2,0.18), transparent 50%);
+  pointer-events: none;
+}
+
+.split h2{ font-size: var(--fs-2xl); margin-bottom: var(--sp-4); }
+.split p + p{ margin-top: var(--sp-4); }
+.split p{ color: rgba(39,23,19,0.74); font-size: var(--fs-md); }
+
+/* ---- Halal certificate badge panel (tentang-kami.html) ----
+   Gives the certificate the same visual weight as the photo panels
+   used in the other .split sections on this page, instead of a tiny
+   logo floating in a barely-there box. */
+.halal-badge{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gb-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--sp-8);
+  min-height: 320px;
+}
+.halal-badge img{
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+}
+@media (max-width: 860px){
+  .halal-badge{ min-height: 220px; }
+}
+
+/* ---- Quote block ---- */
+.quote-block{
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.quote-block svg{ width: 38px; height: 38px; color: var(--gb-marigold); margin-bottom: var(--sp-4); }
+.quote-block p{
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  line-height: 1.3;
+  color: var(--gb-white);
+}
+@media (max-width: 640px){ .quote-block p{ font-size: var(--fs-xl); } }
+
+/* ---- Outlet / branch card ---- */
+.outlet-card{
+  background: var(--gb-white);
+  border-radius: var(--r-md);
+  padding: var(--sp-6);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  border: 1px solid rgba(35,13,16,0.06);
+  transition: box-shadow var(--dur-med), transform var(--dur-med) var(--ease-cart);
+}
+.outlet-card:hover{ box-shadow: var(--shadow-md); transform: translateY(-4px); }
+
+.outlet-card__head{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+.outlet-card__head h3{ font-size: var(--fs-lg); }
+.outlet-card__pin{
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--gb-parchment);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.outlet-card__pin svg{ width: 18px; height: 18px; color: var(--gb-marigold-deep); }
+
+.outlet-card__addr{
+  font-size: var(--fs-sm);
+  color: rgba(39,23,19,0.68);
+  display: flex;
+  gap: 8px;
+}
+.outlet-card__addr svg{ width: 16px; height: 16px; flex-shrink: 0; margin-top: 3px; color: var(--gb-leaf); }
+
+.outlet-card__phones{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-label);
+  font-size: var(--fs-xs);
+}
+.outlet-card__phones a{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gb-maroon);
+  font-weight: 700;
+}
+.outlet-card__phones a:hover{ color: var(--gb-marigold-deep); }
+.outlet-card__phones svg{ width: 14px; height: 14px; }
+
+.outlet-card__hours{
+  font-size: var(--fs-xs);
+  color: rgba(39,23,19,0.68);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.outlet-card__hours svg{ width: 14px; height: 14px; }
+
+.outlet-card__actions{
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+.btn-sm{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  padding: 9px 13px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  transition: transform var(--dur-fast) var(--ease-cart);
+}
+.btn-sm:hover{ transform: translateY(-2px); }
+.btn-sm svg{ width: 14px; height: 14px; }
+.btn-sm--wa{ background: #25d366; color: #fff; }
+.btn-sm--go{ background: #00aa13; color: #fff; }
+.btn-sm--grab{ background: #00b14f; color: #fff; }
+.btn-sm--map{ background: var(--gb-maroon); color: var(--gb-white); }
+
+/* ---- Delivery logo pill ---- */
+.delivery-row{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: var(--sp-3);
+}
+.delivery-row a{
+  display: inline-flex;
+  align-items: center;
+  background: var(--gb-white);
+  border: 1px solid rgba(35,13,16,0.1);
+  border-radius: 999px;
+  padding: 6px 14px;
+  transition: transform var(--dur-fast), box-shadow var(--dur-fast);
+}
+.delivery-row a:hover{ transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.delivery-row img{ height: 20px; width: auto; }
+
+/* ---- CTA banner ---- */
+.cta-banner{
+  background: linear-gradient(120deg, var(--gb-maroon) 0%, var(--gb-maroon-light) 100%);
+  border-radius: var(--r-lg);
+  padding: var(--sp-8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-6);
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+}
+.cta-banner::before{
+  content: '';
+  position: absolute;
+  width: 280px; height: 280px;
+  background: var(--gb-marigold);
+  opacity: 0.14;
+  border-radius: 50%;
+  top: -120px; right: -80px;
+}
+.cta-banner h3{
+  color: var(--gb-white);
+  font-size: var(--fs-2xl);
+  max-width: 480px;
+}
+.cta-banner__actions{ display: flex; gap: var(--sp-3); flex-wrap: wrap; position: relative; z-index: 2; }
+
+/* ---- Badge / halal strip ---- */
+.trust-strip{
+  display: flex;
+  align-items: center;
+  gap: var(--sp-7);
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0.92;
+}
+/* Halal cert wrapper - natural size, never distorted */
+.trust-strip__halal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gb-white);
+  border-radius: var(--r-md);
+  padding: 12px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.trust-strip__halal img{
+  height: 52px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+.trust-strip__item{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-label);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--gb-maroon);
+}
+.trust-strip__item svg{ width: 26px; height: 26px; color: var(--gb-marigold-deep); }
+
+/* ---- Footer ---- */
+.site-footer{
+  background: var(--gb-maroon-deep);
+  color: rgba(248,239,219,0.78);
+  padding-top: var(--sp-8);
+  position: relative;
+  z-index: 2;
+}
+/* The wood-to-footer fade, now shared by every page (it used to be
+   built just for the menu page's wood section) - the wall's last 140px
+   dissolve smoothly into the footer's solid color, so there is never a
+   hard seam/line at the bottom of any page. */
+.site-footer::before{
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: -100px;
+  height: 100px;
+  background: linear-gradient(0deg, var(--gb-maroon-deep) 0%, rgba(22,7,9,0) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+@media (max-width: 640px){
+  .site-footer::before{ top: -70px; height: 70px; }
+}
+.footer-grid{
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: var(--sp-7);
+  padding-bottom: var(--sp-7);
+  border-bottom: 1px solid rgba(244,148,2,0.14);
+}
+@media (max-width: 860px){
+  .footer-grid{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px){
+  .footer-grid{ grid-template-columns: 1fr; }
+}
+.footer-brand{ display: flex; align-items: center; gap: 12px; margin-bottom: var(--sp-4); }
+.footer-brand img{ width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+.footer-brand span{ font-family: var(--font-display); color: var(--gb-white); font-size: 1.1rem; }
+.site-footer p.tag-line{ font-size: var(--fs-sm); max-width: 280px; }
+
+.footer-col h4{
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.08em;
+  color: var(--gb-marigold);
+  margin-bottom: var(--sp-4);
+}
+.footer-col ul{ display: flex; flex-direction: column; gap: 10px; }
+.footer-col a{ font-size: var(--fs-sm); transition: color var(--dur-fast); }
+.footer-col a:hover{ color: var(--gb-marigold); }
+
+.footer-social{ display: flex; gap: 10px; margin-top: var(--sp-4); }
+.footer-social a, .footer-social-wa{
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(244,148,2,0.3);
+  border-radius: 50%;
+  transition: background var(--dur-fast), transform var(--dur-fast);
+  color: inherit;
+  background: none;
+}
+.footer-social a:hover, .footer-social-wa:hover{ background: var(--gb-marigold); color: var(--gb-maroon); transform: translateY(-3px); }
+.footer-social svg, .footer-social-wa svg{ width: 18px; height: 18px; }
+
+.footer-bottom{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  padding-block: var(--sp-5);
+  font-size: var(--fs-xs);
+  color: rgba(248,239,219,0.5);
+}
+.footer-bottom a{ text-decoration: underline; text-underline-offset: 2px; }
+.footer-bottom a:hover{ color: var(--gb-marigold); }
+@media (max-width: 640px){
+  .footer-bottom{ justify-content: center; text-align: center; }
+}
+
+/* ---- Floating WhatsApp button (global, all pages) ---- */
+.wa-float{
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 250;
+  width: 60px; height: 60px;
+  background: #25d366;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  transition: transform var(--dur-fast) var(--ease-cart);
+}
+.wa-float:hover{ transform: scale(1.08) translateY(-2px); }
+.wa-float svg{ width: 30px; height: 30px; color: #fff; }
+.wa-float__ping{
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #25d366;
+  animation: wa-ping 2.4s ease-out infinite;
+  z-index: -1;
+}
+@keyframes wa-ping{
+  0%{ transform: scale(1); opacity: 0.6; }
+  100%{ transform: scale(1.8); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce){
+  .wa-float__ping{ animation: none; }
+}
+@media (max-width: 640px){
+  .wa-float{ width: 52px; height: 52px; bottom: 16px; right: 16px; }
+  .wa-float svg{ width: 26px; height: 26px; }
+}
+
+/* ---- Page hero (sub-pages, shorter than home hero) ---- */
+.page-hero{
+  padding-top: calc(var(--nav-h) + var(--sp-8));
+  padding-bottom: calc(var(--sp-8) + 80px);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  /* No background of its own - a transparent window onto <body>'s wood
+     wall (which already covers the whole page, hero included). A
+     separate, independently-sized gradient here could never line up
+     pixel-for-pixel with the wall continuing below it, which is what
+     created the visible seam. With nothing painted, there's nothing to
+     misalign: the wall is identical on both sides of the seam because
+     it's the same paint. Darkening is added as a fading overlay below,
+     fully transparent well before the bottom edge. */
+  background: transparent;
+}
+.page-hero__backdrop{
+  position: absolute; inset: 0;
+  z-index: 1;
+  background: radial-gradient(circle at 80% 20%, rgba(244,148,2,0.2), transparent 50%);
+}
+/* Top vignette - fades to fully transparent by 55% down so the lower
+   half of every page-hero (whatever its exact height) is plain,
+   untouched wall, guaranteeing an invisible handoff into the section
+   below. */
+.page-hero::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg,
+    rgba(15,5,6,0.86) 0%,
+    rgba(35,13,16,0.55) 24%,
+    rgba(35,13,16,0.22) 38%,
+    rgba(35,13,16,0) 55%);
+  pointer-events: none;
+}
+.page-hero h1{
+  position: relative; z-index: 2;
+  color: var(--gb-white);
+  font-size: clamp(2.2rem, 5vw, var(--fs-4xl));
+  margin-bottom: var(--sp-3);
+}
+.page-hero p{
+  position: relative; z-index: 2;
+  color: rgba(248,239,219,0.82);
+  max-width: 560px;
+  margin: 0 auto;
+  font-size: var(--fs-md);
+}
+.page-hero .eyebrow{ position: relative; z-index: 2; justify-content: center; color: var(--gb-marigold); }
+
+.breadcrumb{
+  position: relative; z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  color: rgba(248,239,219,0.55);
+  margin-bottom: var(--sp-4);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.breadcrumb a:hover{ color: var(--gb-marigold); }
+
+/* ---- Scroll reveal ---- */
+.reveal{
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease-soft), transform 0.7s var(--ease-soft);
+}
+.reveal.is-visible{ opacity: 1; transform: translateY(0); }
+.reveal--scale{ transform: translateY(0) scale(0.94); }
+.reveal--scale.is-visible{ transform: scale(1); }
+@media (prefers-reduced-motion: reduce){
+  .reveal{ opacity: 1; transform: none; transition: none; }
+}
+
+/* stagger helper */
+.reveal-group .reveal:nth-child(1){ transition-delay: 0ms; }
+.reveal-group .reveal:nth-child(2){ transition-delay: 90ms; }
+.reveal-group .reveal:nth-child(3){ transition-delay: 180ms; }
+.reveal-group .reveal:nth-child(4){ transition-delay: 270ms; }
+.reveal-group .reveal:nth-child(5){ transition-delay: 360ms; }
+.reveal-group .reveal:nth-child(6){ transition-delay: 450ms; }
+
+/* ---- Section divider: torn leaf edge ---- */
+.edge-divider{
+  width: 100%;
+  height: 48px;
+  display: block;
+  margin-top: -1px;
+}
+
+/* ---- Back to top ---- */
+.back-top{
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 250;
+  width: 48px; height: 48px;
+  background: var(--gb-maroon);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gb-marigold);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--dur-med), transform var(--dur-med);
+  pointer-events: none;
+}
+.back-top.is-visible{ opacity: 1; transform: translateY(0); pointer-events: auto; }
+.back-top svg{ width: 20px; height: 20px; }
+@media (max-width: 640px){
+  .back-top{ width: 42px; height: 42px; bottom: 16px; left: 16px; }
+}
+
+/* ===================================================================
+   QUICK ACTION BAR
+   A slim, non-animated strip directly under the hero - the "I already
+   know what I want" exit ramp (nearest branch / order delivery / WA /
+   catering) so a repeat or in-a-hurry visitor never has to scroll past
+   the full storytelling homepage to do the one thing they came to do.
+   Intentionally plain: no reveal/tilt/sway - everything below the fold
+   already carries the sticky-note motion language, this bar is the
+   calm, always-legible utility layer above it.
+   =================================================================== */
+.quick-actions{
+  position: relative;
+  z-index: 6;
+  background: var(--gb-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  margin-top: -34px;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.quick-actions__item{
+  flex: 1 1 180px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  transition: background var(--dur-fast), transform var(--dur-fast) var(--ease-cart);
+  min-width: 0;
+}
+.quick-actions__item:hover,
+.quick-actions__item:focus-visible{
+  background: var(--gb-parchment);
+  transform: translateY(-2px);
+  outline: none;
+}
+.quick-actions__icon{
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(244,148,2,0.12);
+  color: var(--gb-marigold-deep);
+}
+.quick-actions__icon svg{ width: 20px; height: 20px; }
+.quick-actions__item--wa .quick-actions__icon{ background: rgba(37,211,102,0.14); color: #1fb457; }
+.quick-actions__item--go .quick-actions__icon{ background: rgba(0,170,19,0.12); color: #00aa13; }
+.quick-actions__item--katering .quick-actions__icon{ background: rgba(185,56,31,0.12); color: var(--gb-chili); }
+.quick-actions__text{ min-width: 0; }
+.quick-actions__text strong{
+  display: block;
+  font-size: var(--fs-sm);
+  color: var(--gb-maroon);
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.quick-actions__text span{
+  display: block;
+  font-size: var(--fs-2xs);
+  color: rgba(39,23,19,0.55);
+  margin-top: 1px;
+}
+.quick-actions__divider{
+  width: 1px;
+  align-self: stretch;
+  background: var(--gb-parchment-dim);
+  margin: 6px 0;
+}
+@media (max-width: 900px){
+  .quick-actions__divider{ display: none; }
+}
+@media (max-width: 640px){
+  .quick-actions{
+    margin-top: -22px;
+    padding: 8px;
+    gap: 6px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .quick-actions::-webkit-scrollbar{ display: none; }
+  .quick-actions__item{ flex: 0 0 auto; padding: 10px 14px; }
+  .quick-actions__text strong{ font-size: var(--fs-xs); }
+}
+
+/* ===================================================================
+   IMAGE PLACEHOLDER FRAME
+   Used wherever a real photo hasn't been supplied yet - keeps the
+   exact size/position/shadow of the final photo note so swapping in
+   the real image later is a one-line change, but is unmistakably a
+   placeholder in the meantime (dashed border, camera icon, label)
+   rather than a broken image or a stretched stock photo.
+   =================================================================== */
+.img-placeholder{
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background:
+    repeating-linear-gradient(135deg, rgba(35,13,16,0.05) 0 10px, rgba(35,13,16,0.02) 10px 20px);
+  border: 2px dashed rgba(35,13,16,0.22);
+  border-radius: 4px;
+  color: rgba(39,23,19,0.45);
+  text-align: center;
+  padding: var(--sp-4);
+}
+.img-placeholder svg{ width: 30px; height: 30px; opacity: 0.7; }
+.img-placeholder span{
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  max-width: 20ch;
+  line-height: 1.4;
+}
+
+
+/* ---- Legal document prose (privacy policy) ----
+   Plain readable long-form text using the site's existing type scale,
+   inside the standard narrow container - no new visual language, just
+   comfortable line length and spacing for reading, not skimming. */
+.legal-doc{ padding-block: var(--sp-4) var(--sp-6); }
+.legal-doc__section{
+  padding-block: var(--sp-6);
+  border-bottom: 1px solid rgba(35,13,16,0.1);
+}
+.legal-doc__section:first-child{ padding-top: 0; }
+.legal-doc__section h2{
+  font-size: var(--fs-lg);
+  margin-bottom: var(--sp-3);
+  color: var(--gb-maroon);
+}
+.legal-doc__section > div,
+.legal-doc__note > div{
+  max-width: 68ch;
+  color: rgba(39,23,19,0.82);
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+.legal-doc__section > div p,
+.legal-doc__note > div p{ margin: 0 0 var(--sp-3); }
+.legal-doc__section > div p:last-child,
+.legal-doc__note > div p:last-child{ margin-bottom: 0; }
+.legal-doc__section > div ul,
+.legal-doc__note > div ul{
+  margin: 0 0 var(--sp-3);
+  padding-left: 1.3em;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.legal-doc__section > div a,
+.legal-doc__note > div a{
+  color: var(--gb-marigold-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.legal-doc__note{
+  margin-top: var(--sp-5);
+  padding: var(--sp-5);
+  background: rgba(244,148,2,0.08);
+  border: 1px dashed rgba(244,148,2,0.35);
+  border-radius: var(--r-md);
+}
+.legal-doc__note h2{
+  font-size: var(--fs-md);
+  margin-bottom: var(--sp-2);
+}

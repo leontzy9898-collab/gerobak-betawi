@@ -1,0 +1,500 @@
+/* ===================================================================
+   GEROBAK BETAWI - NAVIGATION
+   Floating pill nav (cortex-style): centered, rounded capsule that
+   floats off the page edges and tightens on scroll, rather than a
+   full-width bar. Breakpoint set generously so nav items never
+   overflow the viewport at any width - the hamburger takes over
+   before that can happen.
+   =================================================================== */
+
+.nav-outer{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 320; /* stays above .mobile-drawer (z-index 300) so the same
+                    burger button remains visible - and keeps morphing
+                    smoothly in place - while the drawer is open, instead
+                    of being covered and replaced by a differently
+                    positioned close button. */
+  display: flex;
+  justify-content: center;
+  padding: 20px 32px;
+  transition: padding var(--dur-med) var(--ease-soft);
+  pointer-events: none; /* only the pill itself is interactive */
+}
+.nav-outer > *{ pointer-events: auto; }
+
+.nav-outer.is-scrolled{
+  padding: 12px 32px;
+}
+
+.site-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  width: 100%;
+  max-width: 1180px;
+  background: rgba(35,13,16,0.78);
+  border: 1px solid rgba(244,148,2,0.16);
+  border-radius: 100px;
+  padding: 10px 14px 10px 20px;
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: 0 2px 0 rgba(244,148,2,0.05), 0 8px 32px rgba(0,0,0,0.22);
+  transition: padding var(--dur-med) var(--ease-soft),
+              background var(--dur-med) var(--ease-soft),
+              box-shadow var(--dur-med) var(--ease-soft);
+}
+.nav-outer.is-scrolled .site-header{
+  padding: 8px 12px 8px 18px;
+  background: rgba(20,8,9,0.92);
+  box-shadow: 0 2px 0 rgba(244,148,2,0.04), 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.brand__mark{
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  transition: transform var(--dur-med) var(--ease-cart), width var(--dur-med), height var(--dur-med);
+}
+.nav-outer.is-scrolled .brand__mark{ width: 34px; height: 34px; }
+.brand:hover .brand__mark{ transform: rotate(-12deg) scale(1.06); }
+
+.brand__text{
+  font-family: var(--font-display);
+  color: var(--gb-white);
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.brand__text span{
+  display: block;
+  font-size: 0.9em;
+  color: var(--gb-marigold);
+}
+
+.nav-desktop{
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.nav-desktop a{
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.82);
+  padding: 9px 11px;
+  border-radius: 999px;
+  position: relative;
+  transition: color var(--dur-fast), background var(--dur-fast);
+  white-space: nowrap;
+}
+.nav-desktop a:hover{
+  color: var(--gb-white);
+  background: rgba(244,148,2,0.16);
+}
+/* ---- Animated sliding indicator under active nav link ---- */
+.nav-desktop{
+  position: relative;
+}
+.nav-pill-indicator{
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--gb-marigold);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: transform 0.55s var(--ease-soft),
+              width 0.55s var(--ease-soft),
+              height 0.55s var(--ease-soft),
+              opacity 0.32s var(--ease-soft);
+}
+.nav-pill-indicator.is-visible{ opacity: 1; }
+.nav-desktop a{
+  position: relative;
+  z-index: 1;
+}
+/* .pill-text is toggled by JS onto whichever link the sliding pill is
+   currently under (not necessarily the active page), so the text color
+   always matches what's actually behind it and never goes dark-on-dark. */
+.nav-desktop a.pill-text{
+  color: var(--gb-maroon);
+  transition: color 0.55s var(--ease-soft);
+}
+
+/* ---- "Menu" header dropdown ----
+   Opens off the Menu nav item itself (not a separate control elsewhere
+   on the page). Sizing and horizontal position both adapt automatically:
+   the panel shrink-wraps to its longest label up to a cap, and a small
+   JS-computed nudge (--panel-nudge) keeps it fully on-screen even when
+   the trigger sits near the edge of the viewport. */
+.nav-item-dropdown{ position: relative; }
+.nav-item-dropdown > a{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  /* Explicitly pinned to match every other .nav-desktop a link (font,
+     size, weight, case, spacing) instead of relying on inheritance -
+     this trigger sits in its own wrapper div, so a future rule scoped
+     to .nav-item-dropdown could otherwise silently drift it out of
+     sync with "Home" / "Tentang Kami" / "Lokasi" / "Hubungi Kami". */
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.nav-item-dropdown > a span{
+  font: inherit;
+}
+.nav-item-dropdown__chevron{
+  width: 13px; height: 13px;
+  flex-shrink: 0;
+  transition: transform var(--dur-med) var(--ease-soft);
+}
+.nav-item-dropdown.is-open .nav-item-dropdown__chevron{ transform: rotate(180deg); }
+
+.nav-item-dropdown__panel{
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 14px;
+  transform: translateX(calc(-50% + var(--panel-nudge, 0px))) translateY(-6px);
+  width: max-content;
+  min-width: 220px;
+  max-width: min(300px, 90vw);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--gb-maroon-deep);
+  border: 1.5px solid rgba(244,148,2,0.3);
+  border-radius: var(--r-md);
+  padding: 8px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-soft),
+              transform var(--dur-fast) var(--ease-soft),
+              visibility var(--dur-fast);
+}
+/* Invisible bridge over the gap between trigger and panel so the
+   pointer doesn't "leave" the interactive area mid-transit (the open
+   state itself is still driven by JS with a small close-delay, this
+   just makes the hand-off feel contiguous). */
+.nav-item-dropdown__panel::before{
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: -14px;
+  height: 14px;
+}
+.nav-item-dropdown.is-open .nav-item-dropdown__panel{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(calc(-50% + var(--panel-nudge, 0px))) translateY(0);
+}
+.nav-item-dropdown__panel a{
+  /* Matches the same font-family/weight as the other header links
+     ("Home", "Tentang Kami", etc. in .nav-desktop a) instead of the
+     monospace label font, which rendered visibly larger/bolder at
+     the same font-size and made the dropdown look inconsistent with
+     the rest of the nav. Sized slightly smaller than the trigger
+     links (0.84rem) rather than matching it exactly. */
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  color: rgba(248,239,219,0.85);
+  white-space: normal;
+  transition: background var(--dur-fast), color var(--dur-fast);
+}
+.nav-item-dropdown__panel a:hover,
+.nav-item-dropdown__panel a:focus-visible{
+  background: rgba(244,148,2,0.16);
+  color: var(--gb-white);
+  outline: none;
+}
+@media (prefers-reduced-motion: reduce){
+  .nav-item-dropdown__panel, .nav-item-dropdown__chevron{ transition: none; }
+}
+
+.nav-actions{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.lang-switch{
+  display: flex;
+  align-items: center;
+  border: 1.5px solid rgba(244,148,2,0.4);
+  border-radius: 999px;
+  overflow: hidden;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.lang-switch button{
+  padding: 6px 10px;
+  color: rgba(255,255,255,0.65);
+  transition: background var(--dur-fast), color var(--dur-fast);
+  letter-spacing: 0.01em;
+}
+.lang-switch button.is-active{
+  background: var(--gb-marigold);
+  color: var(--gb-maroon);
+}
+
+.btn-wa-nav{
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--gb-marigold);
+  color: var(--gb-maroon);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 9px 16px;
+  border-radius: 999px;
+  transition: transform var(--dur-fast) var(--ease-cart), box-shadow var(--dur-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: none;
+  cursor: pointer;
+}
+.btn-wa-nav:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.btn-wa-nav svg{ width: 16px; height: 16px; flex-shrink: 0; }
+
+.nav-toggle{
+  position: relative;
+  display: none;
+  width: 38px; height: 38px;
+  align-items: center;
+  justify-content: center;
+  color: var(--gb-white);
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: rgba(244,148,2,0.12);
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+.nav-toggle:active{ transform: scale(0.9); }
+.nav-toggle.is-open{ background: rgba(244,148,2,0.22); }
+
+/* ---- Burger -> X morph ----
+   Each bar is a real, explicitly-sized element centered on the
+   button via translate(-50%,-50%) - not an SVG line rotated around a
+   coordinate-system origin, which is what previously made the X look
+   slightly uneven/misaligned on some mobile browsers. Top/bottom bars
+   rotate cleanly around their own true center to form a symmetric X;
+   the middle bar fades out in place. */
+.nav-toggle__bar{
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 18px; height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.32s cubic-bezier(.5,0,.2,1), opacity 0.2s ease;
+}
+.nav-toggle__bar--top{ transform: translate(-50%, -50%) translateY(-6px); }
+.nav-toggle__bar--mid{ transform: translate(-50%, -50%); }
+.nav-toggle__bar--bottom{ transform: translate(-50%, -50%) translateY(6px); }
+.nav-toggle.is-open .nav-toggle__bar--top{
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.nav-toggle.is-open .nav-toggle__bar--mid{
+  opacity: 0;
+  transform: translate(-50%, -50%) scaleX(0);
+}
+.nav-toggle.is-open .nav-toggle__bar--bottom{
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+@media (prefers-reduced-motion: reduce){
+  .nav-toggle, .nav-toggle__bar{ transition: none; }
+}
+
+/* Hide the entire centered link group at a wide-enough breakpoint
+   that the pill can NEVER overflow, regardless of label lengths.
+   This is intentionally generous (1180px) because the pill nav has
+   less room than a full-width bar would. */
+@media (max-width: 1300px){
+  .nav-desktop{ display: none; }
+  .nav-toggle{ display: flex; }
+}
+
+@media (max-width: 560px){
+  .nav-outer{ padding: 14px 16px; }
+  .nav-outer.is-scrolled{ padding: 10px 16px; }
+  .site-header{ padding: 8px 8px 8px 14px; }
+  .brand__text{ font-size: 0.88rem; }
+  .btn-wa-nav span{ display: none; }
+  .btn-wa-nav{ padding: 9px; border-radius: 50%; }
+  .btn-wa-nav svg{ margin: 0; }
+  .lang-switch{ display: none; } /* lives in the mobile drawer instead */
+}
+
+/* ---- Mobile drawer ---- */
+.mobile-drawer{
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  visibility: hidden;
+  pointer-events: none;
+  /* Without this, visibility snaps to hidden the instant .is-open is
+     removed, clipping the panel's slide-out and the backdrop's
+     fade-out mid-animation - closing looked instant even though both
+     transitions below were defined correctly. Delaying the switch by
+     --dur-med lets those transitions finish playing first. */
+  transition: visibility 0s var(--dur-med);
+}
+.mobile-drawer.is-open{
+  visibility: visible;
+  pointer-events: auto;
+  transition: visibility 0s; /* becomes visible immediately on open */
+}
+
+.mobile-drawer__backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(22,7,9,0.6);
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease-soft);
+}
+.mobile-drawer.is-open .mobile-drawer__backdrop{ opacity: 1; }
+
+.mobile-drawer__panel{
+  position: absolute;
+  top: 0; right: 0;
+  width: min(86vw, 360px);
+  height: 100%;
+  background: var(--gb-maroon);
+  background-image: radial-gradient(circle at 100% 0%, rgba(244,148,2,0.18), transparent 55%);
+  padding: var(--sp-6) var(--sp-5);
+  transform: translateX(100%);
+  transition: transform var(--dur-med) var(--ease-soft);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.mobile-drawer.is-open .mobile-drawer__panel{ transform: translateX(0); }
+
+.mobile-drawer__top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sp-6);
+}
+.mobile-drawer__close{
+  /* The header's own burger button (.nav-toggle) now stays visible
+     above the drawer and morphs smoothly into an X in place, so it
+     is the single close control. This button is kept in the DOM
+     (still functional as a fallback) but hidden so a second,
+     differently-positioned X doesn't appear at the same time. */
+  display: none;
+}
+
+.mobile-drawer nav{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mobile-drawer nav a{
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--gb-parchment);
+  padding: 12px 6px;
+  border-bottom: 1px solid rgba(244,148,2,0.14);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mobile-drawer nav a.is-active{ color: var(--gb-marigold); }
+.mobile-drawer nav a svg{ width: 18px; height: 18px; opacity: 0.6; }
+
+/* ---- Mobile "Menu" accordion ----
+   No hover on touch devices, so the header dropdown becomes a tap-to-
+   expand accordion instead. Tapping "Menu" itself still navigates
+   straight to the menu page (default link behavior); the separate
+   chevron button expands category shortcuts in place. */
+.mobile-nav-accordion__row{
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid rgba(244,148,2,0.14);
+}
+.mobile-nav-accordion__row a{
+  flex: 1;
+  border-bottom: none;
+}
+.mobile-nav-accordion__trigger{
+  width: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gb-parchment);
+  border-radius: 8px;
+  transition: background var(--dur-fast), color var(--dur-fast);
+}
+.mobile-nav-accordion__trigger:active{ background: rgba(244,148,2,0.16); }
+.mobile-nav-accordion__chevron{ transition: transform var(--dur-med) var(--ease-soft); }
+.mobile-nav-accordion__trigger[aria-expanded="true"]{ color: var(--gb-marigold); }
+.mobile-nav-accordion__trigger[aria-expanded="true"] .mobile-nav-accordion__chevron{ transform: rotate(180deg); }
+
+.mobile-nav-accordion__panel{
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  transition: max-height var(--dur-med) var(--ease-soft), opacity var(--dur-fast) var(--ease-soft);
+}
+.mobile-nav-accordion.is-open .mobile-nav-accordion__panel{
+  max-height: 420px;
+  opacity: 1;
+}
+.mobile-nav-accordion__panel a{
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: rgba(248,239,219,0.72);
+  padding: 10px 6px 10px 20px;
+  border-bottom: 1px solid rgba(244,148,2,0.08);
+}
+.mobile-nav-accordion__panel a:last-child{ border-bottom: none; }
+.mobile-nav-accordion__panel a:active{ color: var(--gb-marigold); }
+@media (prefers-reduced-motion: reduce){
+  .mobile-nav-accordion__panel, .mobile-nav-accordion__chevron{ transition: none; }
+}
+
+.mobile-drawer__footer{
+  margin-top: auto;
+  padding-top: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.mobile-drawer .lang-switch{
+  align-self: flex-start;
+  border-color: rgba(244,148,2,0.4);
+  display: flex;
+}
+.mobile-drawer .lang-switch button{ padding: 9px 16px; font-size: var(--fs-xs); }

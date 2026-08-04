@@ -1,0 +1,861 @@
+/* ===================================================================
+   GEROBAK BETAWI - STICKY NOTES ON THE WOOD WALL
+   Used for the menu page's "Menu Andalan" cluster right after the
+   hero: instead of one big parchment board, the title, the photo, and
+   each dish are their own small piece of paper pinned/taped straight
+   to the wall - scattered, tilted, uneven, the way a warung really
+   pins things up. Intentionally NOT one wrapping panel: the section
+   itself stays bare (see menu.html) so every note floats directly on
+   the wood grain.
+   =================================================================== */
+
+.sticky-wall{
+  position: relative;
+  padding-top: var(--sp-3);
+  padding-bottom: var(--sp-7);
+}
+
+.sticky-wall__cluster{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 38px 26px;
+}
+
+/* Organic, unaligned scatter - every note sits at a slightly different
+   height instead of lining up on a grid. */
+.sticky-wall__cluster > *:nth-child(1){ margin-top: 6px; }
+.sticky-wall__cluster > *:nth-child(2){ margin-top: 46px; }
+.sticky-wall__cluster > *:nth-child(3){ margin-top: 4px; }
+.sticky-wall__cluster > *:nth-child(4){ margin-top: 30px; }
+.sticky-wall__cluster > *:nth-child(5){ margin-top: -6px; }
+.sticky-wall__cluster > *:nth-child(6){ margin-top: 22px; }
+@media (max-width: 720px){
+  .sticky-wall__cluster > *{ margin-top: 0 !important; }
+}
+
+/* ---- Base note: a hand-cut piece of paper, not a UI card ---- */
+.sticky-note{
+  --tilt: -2deg;
+  position: relative;
+  margin: 0;
+  background: var(--gb-note-yellow);
+  padding: 24px 24px 22px;
+  /* Slightly irregular corners so it reads as torn/cut paper rather
+     than a perfect rounded rectangle. */
+  border-radius: 2px 10px 3px 12px;
+  box-shadow:
+    0 16px 28px -12px rgba(8,3,2,0.55),
+    0 3px 7px rgba(8,3,2,0.25);
+  transform: rotate(var(--tilt));
+  transition: transform 0.35s var(--ease-cart), box-shadow 0.35s var(--ease-soft);
+  will-change: transform;
+}
+.sticky-note:hover,
+.sticky-note:focus-within{
+  animation: none;
+  transform: rotate(0deg) translateY(-6px) scale(1.035);
+  box-shadow:
+    0 26px 38px -12px rgba(8,3,2,0.62),
+    0 8px 14px rgba(8,3,2,0.3);
+  z-index: 6;
+}
+
+/* Pushpin, centered at the top edge - the default mount */
+.sticky-note::before{
+  content: '';
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%);
+  width: 17px; height: 17px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff6dd, var(--gb-pin) 55%, #8a6323 100%);
+  box-shadow: 0 5px 8px var(--gb-pin-shadow);
+  z-index: 3;
+}
+
+/* Washi-tape mount, used instead of a pin on a couple of notes for
+   variety - a strip stuck across one corner. */
+.sticky-note--taped::before{ display: none; }
+.sticky-note--taped::after{
+  content: '';
+  position: absolute;
+  top: -15px; left: 22px;
+  width: 68px; height: 28px;
+  background: var(--gb-tape);
+  border: 1px solid var(--gb-tape-edge);
+  transform: rotate(-9deg);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.18);
+  z-index: 3;
+}
+
+/* ---- Title note - bigger sheet, warmer paper ---- */
+.sticky-note--title{
+  background: var(--gb-note-marigold);
+  max-width: 340px;
+  padding: 28px 26px 24px;
+}
+.sticky-note--title .eyebrow{ margin-bottom: var(--sp-2); color: var(--gb-maroon); }
+.sticky-note--title .eyebrow::before{ background: var(--gb-maroon); }
+.sticky-note--title h2{
+  font-size: clamp(1.5rem, 3vw, var(--fs-2xl));
+  color: var(--gb-maroon);
+  line-height: 1.18;
+}
+
+/* ---- Photo note - a pinned polaroid, not a banner ---- */
+.sticky-note--photo{
+  background: var(--gb-note-white);
+  width: 240px;
+  padding: 14px 14px 42px;
+}
+.sticky-note--photo .sticky-note__frame{
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(35,13,16,0.08);
+  position: relative;
+}
+.sticky-note--photo img{ width: 100%; height: auto; display: block; }
+.sticky-note--photo iframe{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0; display: block;
+}
+.sticky-note--photo figcaption{
+  position: absolute;
+  left: 0; right: 0; bottom: 14px;
+  text-align: center;
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gb-maroon);
+}
+
+/* ---- Dish notes ---- */
+.sticky-note--dish{ width: 258px; }
+.sticky-note--dish .sticky-note__thumb{
+  width: 100%; height: 132px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.22);
+}
+.sticky-note--dish .sticky-note__thumb img{
+  width: 100%; height: 100%; object-fit: cover;
+}
+.sticky-note__tag{
+  display: inline-block;
+  background: var(--gb-marigold-deep);
+  color: var(--gb-white);
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 11px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.sticky-note--dish h3{
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--gb-maroon);
+  margin-bottom: 6px;
+  line-height: 1.15;
+}
+.sticky-note__price{
+  display: inline-block;
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  color: var(--gb-chili);
+  margin-bottom: 8px;
+}
+.sticky-note--dish p{
+  font-size: 0.86rem;
+  color: rgba(39,23,19,0.72);
+  line-height: 1.55;
+}
+
+/* ---- CTA note ---- */
+.sticky-note--cta{
+  background: var(--gb-note-white);
+  width: 224px;
+  text-align: center;
+}
+.sticky-note--cta p{
+  font-size: var(--fs-sm);
+  color: var(--gb-ink);
+  margin-bottom: var(--sp-4);
+  line-height: 1.5;
+}
+
+.sticky-wall__cluster--center{ justify-content: center; }
+.sticky-wall__cluster--tight{ gap: 22px 18px; }
+.sticky-wall__cluster--pair{ margin-bottom: 50px; }
+.sticky-wall__cluster--pair:last-child{ margin-bottom: 0; }
+
+/* ---- Text note - the "eyebrow + heading + paragraphs (+ CTA)" column
+   that used to live inside a split/board. Left-aligned, roomier than
+   the title note since it usually carries several paragraphs. ---- */
+.sticky-note--text{
+  flex: 1 1 420px;
+  width: 100%;
+  max-width: 640px;
+  padding: 30px 30px 28px;
+}
+.sticky-note--text .eyebrow{ margin-bottom: var(--sp-2); }
+.sticky-note--text h2{
+  font-size: clamp(1.4rem, 2.6vw, var(--fs-2xl));
+  color: var(--gb-maroon);
+  line-height: 1.2;
+  margin-bottom: var(--sp-3);
+}
+.sticky-note--text p{
+  font-size: 0.92rem;
+  color: rgba(39,23,19,0.75);
+  line-height: 1.65;
+  margin-bottom: var(--sp-3);
+}
+.sticky-note--text p:last-of-type{ margin-bottom: 0; }
+.sticky-note--text .btn,
+.sticky-note--text .btn-sm{ margin-top: var(--sp-4); }
+
+/* ---- Quote note - a single centered sheet for pull-quotes ---- */
+.sticky-note--quote{
+  background: var(--gb-note-marigold);
+  max-width: 620px;
+  width: 100%;
+  text-align: center;
+  padding: 36px 40px;
+}
+.sticky-note--quote svg{
+  width: 30px; height: 30px;
+  color: var(--gb-maroon);
+  opacity: 0.5;
+  margin-bottom: var(--sp-3);
+}
+.sticky-note--quote p{
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  color: var(--gb-maroon);
+  line-height: 1.5;
+}
+.sticky-note--quote .eyebrow{ justify-content: center; color: var(--gb-maroon); margin-bottom: var(--sp-3); }
+.sticky-note--quote .eyebrow::before{ background: var(--gb-maroon); }
+
+/* ---- Stat note - small square-ish note, big number + label ---- */
+.sticky-note--stat{
+  width: 168px;
+  text-align: center;
+  padding: 22px 16px 20px;
+}
+.sticky-note--stat b{
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  color: var(--gb-chili);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.sticky-note--stat span{
+  display: block;
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(39,23,19,0.7);
+  line-height: 1.4;
+}
+
+/* ---- Trust note - small icon + label, used for trust-strip items ---- */
+.sticky-note--trust{
+  width: 176px;
+  text-align: center;
+  padding: 22px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.sticky-note--trust svg{
+  width: 26px; height: 26px;
+  color: var(--gb-chili);
+  margin: 0 auto 10px;
+}
+.sticky-note--trust span{
+  display: block;
+  font-family: var(--font-label);
+  font-size: var(--fs-xs);
+  color: var(--gb-ink);
+  line-height: 1.4;
+  max-width: 18ch;
+}
+
+/* ---- Mission note - numbered note (replaces numbered leaf-cards) ---- */
+.sticky-note--mission{ width: 258px; }
+.sticky-note--mission .sticky-note__num{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--gb-maroon);
+  color: var(--gb-marigold);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  margin-bottom: 14px;
+}
+.sticky-note--mission h3{
+  font-size: var(--fs-lg);
+  color: var(--gb-maroon);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.sticky-note--mission p{
+  font-size: 0.86rem;
+  color: rgba(39,23,19,0.72);
+  line-height: 1.55;
+}
+
+/* ---- Chip note - tiny pinned tag, used for jump-link rows ---- */
+.sticky-note--chip{
+  padding: 10px 20px;
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  color: var(--gb-maroon);
+  text-decoration: none;
+  display: inline-block;
+}
+.sticky-note--chip::before{ width: 12px; height: 12px; top: -6px; }
+.sticky-note--chip:hover,
+.sticky-note--chip:focus-within{
+  transform: rotate(0deg) translateY(-4px) scale(1.05);
+}
+.sticky-note--chip.is-active{
+  background: var(--gb-marigold);
+  color: var(--gb-maroon-deep, #160709);
+}
+.sticky-note--chip.is-active::before{
+  background: radial-gradient(circle at 32% 28%, #fff6dd, var(--gb-chili) 55%, #7a2414 100%);
+}
+
+/* ---- Contact-mini note - small note for a single contact channel
+   (WhatsApp / phone / email), icon + label + value ---- */
+.sticky-note--contact{
+  width: 236px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  padding: 18px 18px;
+}
+.sticky-note--contact .sticky-note__icon{
+  flex-shrink: 0;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(35,13,16,0.08);
+  display: flex; align-items: center; justify-content: center;
+}
+.sticky-note--contact .sticky-note__icon svg{ width: 18px; height: 18px; color: var(--gb-maroon); }
+.sticky-note--contact strong{ display: block; font-size: var(--fs-sm); color: var(--gb-maroon); }
+.sticky-note--contact span{ display: block; font-size: var(--fs-xs); color: rgba(39,23,19,0.6); margin-top: 2px; }
+
+/* ---- Map / postcard note - an embedded map framed like a postcard
+   pinned to the wall, matching the photo note's proportions ---- */
+.sticky-note--map{
+  background: var(--gb-note-white);
+  width: 100%;
+  max-width: 420px;
+  flex: 1 1 340px;
+  padding: 14px 14px 16px;
+}
+.sticky-note--map .sticky-note__frame{
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(35,13,16,0.08);
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+.sticky-note--map iframe{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0;
+}
+
+/* ---- Location note - one branch's full info (title, address,
+   contact, actions) as a single note; pairs with a .sticky-note--map
+   next to it so "each location" reads as its own separate note. ---- */
+.sticky-note--location{
+  width: 100%;
+  max-width: 460px;
+  flex: 1 1 380px;
+  padding: 26px 26px 24px;
+}
+.sticky-note--location h3{
+  font-size: var(--fs-lg);
+  color: var(--gb-maroon);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.sticky-note--location .addr{
+  display: flex; gap: 8px; align-items: flex-start;
+  font-size: 0.86rem;
+  color: rgba(39,23,19,0.72);
+  line-height: 1.5;
+  margin-bottom: var(--sp-3);
+}
+.sticky-note--location .addr svg{ width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; color: var(--gb-chili); }
+
+/* ---- Form note - the whole contact form as one cohesive note (a
+   functional unit stays together rather than being split apart) ---- */
+.sticky-note--form{
+  background: var(--gb-note-white);
+  width: 100%;
+  max-width: 560px;
+  padding: 34px 34px 30px;
+}
+.sticky-note--form::before{ width: 20px; height: 20px; top: -12px; }
+
+/* ---- Social note - "Ikuti Kami": label + a row of round icon
+   buttons (Instagram, Facebook, WhatsApp-with-branch-picker) ---- */
+.sticky-note--social{
+  width: 236px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 22px 18px 20px;
+}
+.sticky-note--social__label{
+  font-family: var(--font-label);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gb-maroon);
+}
+.sticky-note--social__icons{
+  display: flex;
+  gap: 10px;
+}
+.sticky-note--social__icons a,
+.sticky-note--social__icons button{
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(35,13,16,0.08);
+  color: var(--gb-maroon);
+  transition: background var(--dur-fast), color var(--dur-fast), transform var(--dur-fast);
+}
+.sticky-note--social__icons a svg,
+.sticky-note--social__icons button svg{ width: 18px; height: 18px; }
+.sticky-note--social__icons a:hover,
+.sticky-note--social__icons button:hover{
+  background: var(--gb-marigold);
+  color: var(--gb-maroon);
+  transform: translateY(-3px);
+}
+.sticky-note--social__handle{
+  font-size: var(--fs-xs);
+  color: rgba(39,23,19,0.6);
+}
+
+/* ---- Rail - a plain (non-note) layout wrapper that stacks a couple
+   of small notes into one tidy column, so they read as "beside the
+   form" instead of scattering loose across the row. ---- */
+.sticky-wall__rail{
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+@media (max-width: 720px){
+  .sticky-wall__rail{ width: 100%; align-items: center; }
+}
+/* ---- Pinned-card scatter: for the site's existing, already-polished
+   card components (dark menu cards with photo+list, leaf-cards) - we
+   don't reskin these as paper notes (a price list needs to stay dense
+   and scannable, not look like a napkin), but inside a bare sticky
+   wall they still need to read as separate items pinned to the wood,
+   not boxed together in one panel. This adds a pin + tilt + organic
+   stagger without touching their internal styling. ---- */
+.sticky-wall .nkt-menu-card,
+.sticky-wall .leaf-card,
+.sticky-wall .outlet-card{
+  position: relative;
+  transform: rotate(var(--card-tilt, -1.4deg));
+  transition: transform 0.35s var(--ease-cart), box-shadow 0.35s var(--ease-soft);
+}
+.sticky-wall .nkt-menu-card:hover,
+.sticky-wall .leaf-card:hover,
+.sticky-wall .outlet-card:hover{
+  transform: rotate(0deg) translateY(-6px);
+  z-index: 4;
+}
+.sticky-wall .nkt-menu-card::before,
+.sticky-wall .leaf-card::before,
+.sticky-wall .outlet-card::before{
+  content: '';
+  position: absolute;
+  top: -9px; left: 50%;
+  transform: translateX(-50%);
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff6dd, var(--gb-pin) 55%, #8a6323 100%);
+  box-shadow: 0 5px 8px var(--gb-pin-shadow);
+  z-index: 3;
+}
+.sticky-wall .nkt-menu-grid > *:nth-child(odd){ --card-tilt: -1.3deg; margin-top: 2px; }
+.sticky-wall .nkt-menu-grid > *:nth-child(even){ --card-tilt: 1.5deg; margin-top: 30px; }
+.sticky-wall .grid--3 > *:nth-child(3n+1){ --card-tilt: -1.6deg; margin-top: 0; }
+.sticky-wall .grid--3 > *:nth-child(3n+2){ --card-tilt: 1.7deg; margin-top: 32px; }
+.sticky-wall .grid--3 > *:nth-child(3n+3){ --card-tilt: -1.9deg; margin-top: 12px; }
+@media (max-width: 720px){
+  .sticky-wall .nkt-menu-grid > *,
+  .sticky-wall .grid--3 > *{ margin-top: 0 !important; }
+}
+
+/* ---- Entrance: pinned into place, then settles with a small
+   idle sway - the "hanging on the wall" motion the brief asked for.
+   Runs off the same .reveal/.is-visible trigger main.js already uses
+   site-wide, so no extra JS is required. ---- */
+.sticky-note.reveal{ opacity: 0; }
+.sticky-note.reveal.is-visible{
+  animation:
+    note-pin-in 0.7s var(--ease-cart) both,
+    note-sway 7s ease-in-out 0.7s infinite;
+}
+@keyframes note-pin-in{
+  0%{   opacity: 0; transform: translateY(-22px) rotate(calc(var(--tilt) * 3)); }
+  55%{  opacity: 1; transform: translateY(8px) rotate(calc(var(--tilt) * -1.4)); }
+  78%{  transform: translateY(-2px) rotate(calc(var(--tilt) * 0.6)); }
+  100%{ opacity: 1; transform: translateY(0) rotate(var(--tilt)); }
+}
+@keyframes note-sway{
+  0%, 100%{ transform: rotate(var(--tilt)); }
+  50%{ transform: rotate(calc(var(--tilt) + 1deg)); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .sticky-note.reveal.is-visible{ animation: none; opacity: 1; transform: rotate(var(--tilt)); }
+}
+
+/* ===================================================================
+   REVIEW NOTES - social proof, pinned to the wall like everything else
+   Small pinned notes (short quote + stars + name + branch), plus one
+   "headline" note carrying the aggregate rating across all 6 branches.
+   Deliberately kept SMALL and FEW (max ~6-7 notes) so this reads as a
+   quick, credible glance rather than a full testimonials wall - trust
+   established in one scroll-stop, not a page-filling section.
+   =================================================================== */
+
+.review-strip{
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 4px 26px;
+  scrollbar-width: none;
+}
+.review-strip::-webkit-scrollbar{ display: none; }
+.review-strip > *{ scroll-snap-align: start; flex-shrink: 0; }
+
+.review-stars{
+  display: inline-flex;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+.star{ position: relative; width: 15px; height: 15px; flex-shrink: 0; }
+.star svg{ position: absolute; inset: 0; width: 15px; height: 15px; }
+.star__bg{ color: rgba(35,13,16,0.18); }
+.star__fg{ color: var(--gb-marigold-deep); clip-path: inset(0 0 0 0); }
+.star--empty .star__fg{ display: none; }
+.star--half .star__fg{ clip-path: inset(0 50% 0 0); }
+.sticky-note--rating .star{ width: 19px; height: 19px; }
+.sticky-note--rating .star svg{ width: 19px; height: 19px; }
+
+/* ---- Aggregate headline note - the "4.5 across 6 branches" anchor,
+   sized and weighted like a stat note but wider to carry more text ---- */
+.sticky-note--rating{
+  background: var(--gb-note-white);
+  width: 254px;
+  text-align: center;
+  padding: 26px 22px 22px;
+}
+.sticky-note--rating__num{
+  font-family: var(--font-display);
+  font-size: var(--fs-4xl);
+  color: var(--gb-maroon);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.sticky-note--rating .review-stars{ justify-content: center; }
+.sticky-note--rating__count{
+  font-size: var(--fs-xs);
+  color: rgba(39,23,19,0.6);
+  line-height: 1.5;
+}
+.sticky-note--rating__count b{ color: var(--gb-ink); }
+.sticky-note--rating__source{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(35,13,16,0.14);
+  width: 100%;
+  justify-content: center;
+  font-family: var(--font-label);
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gb-marigold-deep);
+  font-weight: 700;
+}
+.sticky-note--rating__source svg{ width: 13px; height: 13px; }
+
+/* ---- Individual review note ---- */
+.sticky-note--review{
+  background: var(--gb-note-white);
+  width: 240px;
+  padding: 20px 20px 18px;
+}
+/* Quote marks are generated in CSS (not baked into the translated
+   string) so the ID/EN copy in js/i18n.js can stay plain text. */
+.sticky-note--review p::before{ content: '\201C'; }
+.sticky-note--review p::after{ content: '\201D'; }
+.sticky-note--review p{
+  font-size: 0.86rem;
+  color: rgba(39,23,19,0.8);
+  line-height: 1.55;
+  margin-bottom: 14px;
+  /* clamp to 4 lines so one long review can never blow out the note
+     and break the scattered layout */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---- Review photo: for reviews that came with a customer photo
+   attached on Google. Sized to sit neatly inside the existing note
+   width without changing the note's footprint. ---- */
+.sticky-note--review--photo{ padding-top: 14px; }
+.sticky-note--review__photo{
+  margin: 0 0 12px;
+  border-radius: var(--r-sm, 10px);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: rgba(35,13,16,0.06);
+}
+.sticky-note--review__photo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.sticky-note--review__foot{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(35,13,16,0.08);
+}
+.sticky-note--review__author{
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--fs-2xs);
+  color: var(--gb-maroon);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sticky-note--review__branch{
+  flex-shrink: 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: rgba(244,148,2,0.14);
+  color: var(--gb-marigold-deep);
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px){
+  .review-strip{ margin: 0 calc(var(--sp-4) * -1); padding-left: var(--sp-4); padding-right: var(--sp-4); }
+}
+
+/* ---- Dish note carousel - same footprint as .sticky-note__thumb, but
+   holds several photos you can swipe/scroll/drag through instead of
+   one static image (used for "Nasi Kucing 7 Rasa", one slide per rasa). ---- */
+.sticky-note--dish .sticky-note__carousel{
+  position: relative;
+  width: 100%; height: 132px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.22);
+}
+.sticky-note__carousel-track{
+  display: flex;
+  width: 100%; height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+}
+.sticky-note__carousel-track::-webkit-scrollbar{ display: none; }
+.sticky-note__carousel-track.is-dragging{ cursor: grabbing; scroll-snap-type: none; }
+.sticky-note__carousel-slide{
+  flex: 0 0 100%;
+  width: 100%; height: 100%;
+  scroll-snap-align: start;
+}
+.sticky-note__carousel-slide img{
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.sticky-note__carousel-btn{
+  position: absolute;
+  top: 50%; left: 6px;
+  transform: translateY(-50%);
+  width: 24px; height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(20,10,8,0.55);
+  color: var(--gb-white, #fff);
+  font-size: 17px;
+  line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+.sticky-note__carousel-btn--next{ left: auto; right: 6px; }
+.sticky-note__carousel:hover .sticky-note__carousel-btn,
+.sticky-note__carousel-btn:focus-visible{ opacity: 1; }
+.sticky-note__carousel-btn:hover{ background: rgba(20,10,8,0.82); }
+
+/* Touch devices have no hover state, so keep the buttons visible there
+   (swiping still works too - the buttons are just an extra affordance). */
+@media (hover: none){
+  .sticky-note__carousel-btn{ opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .sticky-note__carousel-track{ scroll-behavior: auto; }
+}
+
+/* ---- Hangout module override - the video note and the WiFi/text note
+   in this one pair should read as equals (same width), unlike the
+   default photo-note-is-small / text-note-is-wide pairing used
+   elsewhere on the site. Scoped to this section only. ---- */
+.sticky-wall__cluster--hangout{ align-items: flex-start; }
+.sticky-wall__cluster--hangout > .sticky-note--photo-lg{
+  width: 100%;
+  flex: 1 1 420px;
+  max-width: 480px;
+  padding: 16px 16px 16px;
+}
+.sticky-wall__cluster--hangout > .sticky-note--photo-lg figcaption{
+  position: static;
+  margin-top: 10px;
+}
+.sticky-wall__cluster--hangout > .sticky-note--text-sm{
+  flex: 1 1 420px;
+  width: 100%;
+  max-width: 480px;
+  padding: 26px 28px 26px;
+}
+@media (max-width: 720px){
+  .sticky-wall__cluster--hangout > .sticky-note--photo-lg,
+  .sticky-wall__cluster--hangout > .sticky-note--text-sm{ max-width: 100%; }
+}
+
+/* ===================================================================
+   FAQ NOTES - each question is its own small pinned note (native
+   <details>/<summary>, no JS needed) instead of one big card, so the
+   FAQ reads the same as every other "pinned to the wood wall" cluster
+   on the site. The section heading note above uses the taped mount
+   (.sticky-note--taped); every question note below keeps the default
+   pushpin mount for contrast, per the pin/tape split used elsewhere.
+   =================================================================== */
+.sticky-note--faq{
+  width: 300px;
+  max-width: 100%;
+  padding: 22px 22px 20px;
+  cursor: pointer;
+}
+.sticky-note--faq summary{
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--gb-maroon);
+  font-weight: 600;
+  line-height: 1.3;
+  outline-offset: 4px;
+}
+.sticky-note--faq summary::-webkit-details-marker{ display: none; }
+
+/* Toggle icon: two absolutely-centered CSS bars, not a text glyph.
+   A "+" character's visual weight is never quite centered inside its
+   own box (font-dependent ascent/descent), which is why it looked
+   off-center - real geometry sidesteps that entirely and gives a
+   perfectly smooth, symmetrical morph into an X, the same technique
+   the header's burger button already uses. */
+.sticky-note--faq__toggle{
+  position: relative;
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: rgba(244,148,2,0.16);
+  transition: background var(--dur-fast);
+}
+.sticky-note--faq__toggle::before,
+.sticky-note--faq__toggle::after{
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  background: var(--gb-marigold-deep);
+  border-radius: 1px;
+  transform: translate(-50%, -50%);
+  transition: transform var(--dur-med) var(--ease-soft), background var(--dur-fast);
+}
+.sticky-note--faq__toggle::before{ width: 12px; height: 2px; }
+.sticky-note--faq__toggle::after{ width: 2px; height: 12px; }
+.sticky-note--faq[open] .sticky-note--faq__toggle{ background: var(--gb-marigold-deep); }
+.sticky-note--faq[open] .sticky-note--faq__toggle::before,
+.sticky-note--faq[open] .sticky-note--faq__toggle::after{
+  background: var(--gb-white);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.sticky-note--faq p{
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(35,13,16,0.14);
+  font-size: 0.86rem;
+  color: rgba(39,23,19,0.75);
+  line-height: 1.6;
+}
+@media (max-width: 480px){
+  .sticky-note--faq{ width: 100%; }
+}

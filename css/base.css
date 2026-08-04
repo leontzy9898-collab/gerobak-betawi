@@ -1,0 +1,289 @@
+/* ===================================================================
+   GEROBAK BETAWI - BASE / RESET
+   =================================================================== */
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html{
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body{
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--gb-ink);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ===================================================================
+   WOOD WALL - site-wide backdrop
+   Every page sits on one continuous cart-wood wall instead of a flat
+   parchment fill. Content panels (see .section below) float in front
+   of it like boards, menus and photos pinned up on a warung wall.
+   Pure layered gradients - no image request, crisp at any zoom/DPI.
+
+   Painted on a dedicated body::before (position:fixed, negative
+   z-index) rather than directly on body's own background with
+   background-attachment:fixed. The two approaches look identical when
+   nothing moves, but background-attachment:fixed is composited by the
+   browser as its own scrolling layer, and on some GPUs/large or
+   high-DPI (typically laptop/desktop) screens that compositing step
+   introduces a faint seam or banding line exactly where a hero's
+   overlay (::before vignette) hands off to the plain wall below -
+   the well-known "fixed background seam" rendering artifact. A true
+   position:fixed element has no such seam because it is never
+   re-tiled or re-composited relative to scroll; it is simply always
+   there, so the hero and the section after it are guaranteed to be
+   looking at the exact same pixels. =================================================================== */
+body::before{
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--gb-wood-2);
+  background-image:
+    repeating-linear-gradient(90deg, var(--gb-wood-grain) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(90deg, var(--gb-wood-seam) 0 2px, transparent 2px 158px),
+    linear-gradient(115deg, var(--gb-wood-3) 0%, var(--gb-wood-1) 45%, var(--gb-wood-2) 78%, var(--gb-wood-1) 100%);
+}
+/* True fixed-position parallax is unreliable on touch devices (iOS
+   Safari in particular) and can visibly judder - fall back to a plain
+   scrolling backdrop there instead of a glitchy one. */
+@media (hover: none), (pointer: coarse){
+  body::before{ position: absolute; }
+}
+@media (prefers-reduced-motion: reduce){
+  body::before{ position: absolute; }
+}
+
+img{ max-width: 100%; height: auto; display: block; }
+svg{ display: block; }
+
+a{ color: inherit; text-decoration: none; }
+
+ul, ol{ margin: 0; padding: 0; list-style: none; }
+
+button{
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+input, textarea, select{
+  font-family: inherit;
+  font-size: inherit;
+}
+
+h1, h2, h3, h4, h5, h6{
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.08;
+  color: var(--gb-maroon);
+}
+
+p{ margin: 0; }
+
+/* Visible, brand-colored focus rings everywhere - accessibility first */
+:focus-visible{
+  outline: 3px solid var(--gb-marigold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection{
+  background: var(--gb-marigold);
+  color: var(--gb-maroon);
+}
+
+/* Skip link for keyboard users */
+.skip-link{
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--gb-marigold);
+  color: var(--gb-maroon);
+  padding: 12px 20px;
+  z-index: 999;
+  font-weight: 700;
+  border-radius: 0 0 var(--r-sm) 0;
+}
+.skip-link:focus{ left: 0; }
+
+.container{
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding-inline: var(--sp-5);
+}
+.container--narrow{ max-width: var(--maxw-narrow); }
+
+@media (max-width: 640px){
+  .container{ padding-inline: var(--sp-4); }
+}
+
+.visually-hidden{
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+/* Lazy-load fade-in */
+img[loading="lazy"]{
+  background: var(--gb-parchment-dim);
+}
+
+/* Reusable section rhythm - every section is a board floating in front
+   of the wood wall (see body, above), pinned up with a small nail/tack
+   at the top. Default is a warm parchment board; --dark and --leaf are
+   alternate finishes (espresso panel / framed chalkboard). */
+.section{
+  padding-block: var(--sp-9);
+  position: relative;
+  z-index: 2;
+  background: var(--gb-parchment);
+  color: var(--gb-ink);
+  border-radius: 32px;
+  margin-top: -20px;
+  box-shadow: var(--shadow-hang);
+}
+@media (max-width: 720px){
+  .section{ padding-block: var(--sp-7); }
+}
+
+/* Sections that intentionally run full-bleed (hero, marquee ribbon,
+   footer) or that already provide their own background opt out of the
+   floating-board treatment with this escape hatch. */
+.section--bare{
+  background: none;
+  border-radius: 0;
+  margin-top: 0;
+  box-shadow: none;
+}
+
+.section--dark{
+  background: var(--gb-maroon);
+  color: var(--gb-parchment);
+  /* Curved top AND bottom edges so the block reads as one soft floating
+     panel instead of ending in an abrupt hard-cornered edge. */
+  border-radius: 32px;
+  margin-top: -20px;
+  position: relative;
+  z-index: 2;
+  box-shadow: var(--shadow-hang);
+}
+
+.section--leaf{
+  background: var(--gb-leaf-deep);
+  color: var(--gb-parchment);
+  border-radius: 28px;
+  margin-top: -20px;
+  position: relative;
+  z-index: 2;
+  /* A chalkboard menu needs a wooden frame to read as something mounted
+     ON the wall rather than a flat green shape sitting oddly next to
+     the planks - see the pin/frame treatment below. */
+  border: 10px solid var(--gb-frame);
+  box-shadow:
+    inset 0 0 0 2px rgba(0,0,0,0.18),
+    var(--shadow-hang);
+  background-image:
+    radial-gradient(ellipse 120% 70% at 50% 0%, rgba(255,255,255,0.05), transparent 60%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, rgba(0,0,0,0.22), transparent 65%);
+}
+
+/* ---- Wall-mount pin: every floating board gets one small tack at the
+   top center, reinforcing the "pinned to the wall" read. Purely
+   decorative (aria-hidden via ::before, no markup needed). ---- */
+.section::before,
+.section--dark::before,
+.section--leaf::before{
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff6dd, var(--gb-pin) 55%, #8a6323 100%);
+  box-shadow: 0 5px 8px var(--gb-pin-shadow);
+  z-index: 3;
+}
+.section--leaf::before{ top: -19px; }
+/* Sections that overlap straight up into a hero/board above them, or
+   that are the very first thing on the page, don't need a visible pin
+   since there's no seam to bridge. */
+.section--flat-top::before,
+.section--bare::before{ display: none; }
+
+.section--dark.section--flat-bottom,
+.section--leaf.section--flat-bottom{
+  border-radius: 32px 32px 0 0;
+}
+.section--leaf.section--flat-bottom{ border-bottom-width: 0; }
+
+.section--dark > .container > h2, .section--dark > .container > h3,
+.section--dark .section-head h2, .section--dark .section-head h3,
+.section--dark .quote-block h2, .section--dark .quote-block h3,
+.section--dark .split h2, .section--dark .split h3{ color: var(--gb-white); }
+
+.section--leaf > .container > h2, .section--leaf > .container > h3,
+.section--leaf .section-head h2, .section--leaf .section-head h3,
+.section--leaf .menu-category__head h2, .section--leaf .menu-category__head h3,
+.section--leaf .split h2, .section--leaf .split h3{ color: var(--gb-white); }
+
+.eyebrow{
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--fs-xs);
+  color: var(--gb-marigold-deep);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  margin-bottom: var(--sp-3);
+}
+.eyebrow::before{
+  content: '';
+  width: 26px; height: 2px;
+  background: var(--gb-marigold);
+  display: inline-block;
+}
+.section--dark .eyebrow, .section--leaf .eyebrow{ color: var(--gb-marigold); }
+
+.section-head{
+  max-width: 680px;
+  margin-bottom: var(--sp-7);
+}
+.section-head h2{
+  font-size: var(--fs-3xl);
+  margin-bottom: var(--sp-3);
+}
+.section-head p{
+  font-size: var(--fs-md);
+  color: rgba(39,23,19,0.72);
+}
+.section--dark .section-head p, .section--leaf .section-head p{
+  color: rgba(248,239,219,0.78);
+}
+/* .split p defaults to a dark ink color meant for light (parchment)
+   backgrounds. Inside a dark/leaf section - e.g. the Nasi Bakar block
+   on nasi-kucing-bakar.html - that left the paragraph nearly invisible
+   against the dark background (contrast ~1.4:1). Override it the same
+   way .section-head p already is. */
+.section--dark .split p, .section--leaf .split p{
+  color: rgba(248,239,219,0.82);
+}
+
+@media (max-width: 640px){
+  .section-head h2{ font-size: var(--fs-2xl); }
+}

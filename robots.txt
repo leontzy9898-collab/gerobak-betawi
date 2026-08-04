@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# AI assistants / answer engines: see /ai.txt and /llms.txt for a
+# plain-language summary of what this business is, does, and serves.
+Sitemap: https://www.gerobakbetawi.com/sitemap.xml
